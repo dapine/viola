@@ -11,6 +11,7 @@ interface TimelineProps {
   lineColor: string
   longLineColor: string
   crops?: Array<Crop>
+  setVideoTime(time: number): void
 }
 
 interface Crop {
@@ -139,6 +140,11 @@ const Timeline: React.FC<TimelineProps> = props => {
       let y = e.clientY - rect.top
 
       setMouseY(y)
+
+      if (e.ctrlKey) {
+        const time = mouseY / minimumScale * minimumScaleTime
+        props.setVideoTime(time)
+      }
     }}
     onWheel={(e) => {
       e.preventDefault()
@@ -165,6 +171,8 @@ const Timeline: React.FC<TimelineProps> = props => {
         let crop: Crop = { start: time }
         setCurrentCrops([...currentCrops, { ...crop }])
       }
+
+      props.setVideoTime(time)
     }}
   />
 }
