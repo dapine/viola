@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 
 interface TimelineProps {
   width: number
@@ -69,11 +69,13 @@ const Timeline: React.FC<TimelineProps> = props => {
   const { width, height, minimumScale, minimumScalesInLongScale,
     minimumScaleTime, offsetLeft, lineColor, longLineColor, lineWidth } = props
 
-  const drawMousePosition = (ctx: any) => {
-    drawLine(ctx, 0, mouseY, 20, mouseY, "#ff0000", 2)
-  }
+  const [currentMinimumScale, setCurrentMinimumScale] = useState(minimumScale);
 
-  const draw = (ctx: any) => {
+  const drawMousePosition = useCallback((ctx: any) => {
+    drawLine(ctx, 0, mouseY, 20, mouseY, "#ff0000", 2)
+  }, [mouseY]);
+
+  const draw = useCallback((ctx: any) => {
     ctx.clearRect(0, 0, width, height)
 
     ctx.fillStyle = "#999"
@@ -82,17 +84,18 @@ const Timeline: React.FC<TimelineProps> = props => {
     const beginX = 0
     const endX = 20
 
-    for (let i = 0; i < height; i += minimumScale) {
-      if (i % (minimumScale * minimumScalesInLongScale) === 0) {
+    for (let i = 0; i < height; i += currentMinimumScale) {
+      if (i % (currentMinimumScale * minimumScalesInLongScale) === 0) {
         drawLine(ctx, beginX, i + offsetLeft, endX, i + offsetLeft, longLineColor, lineWidth)
 
-        const showTime = (i / minimumScale) * minimumScaleTime
+        const showTime = (i / currentMinimumScale) * minimumScaleTime
         ctx.fillText(formatSeconds(showTime), endX, i + offsetLeft)
       } else {
         drawLine(ctx, beginX, i + offsetLeft, 10, i + offsetLeft, lineColor, lineWidth)
       }
     }
-  }
+  }, [width, height, currentMinimumScale, minimumScalesInLongScale, offsetLeft, lineColor,
+    lineWidth, longLineColor, minimumScaleTime])
 
   useEffect(() => {
     const canvas = ref?.current
@@ -112,15 +115,22 @@ const Timeline: React.FC<TimelineProps> = props => {
       window.cancelAnimationFrame(animationFrame)
     }
 
-  }, [mouseY])
+  }, [mouseY, draw, drawMousePosition])
 
-  return <canvas ref={ref} {...props} onMouseMove={(e) => {
-    // @ts-ignore: Object is possibly 'null'.
-    const rect = ref.current.getBoundingClientRect()
-    let y = e.clientY - rect.top
+  return <canvas ref={ref} {...props}
+    onMouseMove={(e) => {
+      // @ts-ignore: Object is possibly 'null'.
+      const rect = ref.current.getBoundingClientRect()
+      let y = e.clientY - rect.top
 
-    setMouseY(y)
-  }} />
+      setMouseY(y)
+    }}
+    onWheel={(e) => {
+      e.preventDefault();
+      const cur = currentMinimumScale + (e.deltaY * 0.01) * -1;
+      setCurrentMinimumScale(cur);
+    }}
+  />
 }
 
 export default Timeline

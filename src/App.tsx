@@ -3,7 +3,7 @@ import Timeline from "./Timeline";
 function App() {
   return <Timeline
     width={250}
-    height={900}
+    height={window.innerHeight}
     minimumScale={10}
     minimumScaleTime={1}
     minimumScalesInLongScale={10}
