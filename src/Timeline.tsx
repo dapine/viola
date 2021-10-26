@@ -14,6 +14,8 @@ interface TimelineProps {
 }
 
 interface Crop {
+  start: number
+  end?: number
 }
 
 const calc = (width: number, minimumScale: number, minimumScaleTime: number) => {
@@ -67,13 +69,25 @@ const Timeline: React.FC<TimelineProps> = props => {
   const [mouseY, setMouseY] = useState(0.0)
 
   const { width, height, minimumScale, minimumScalesInLongScale,
-    minimumScaleTime, offsetLeft, lineColor, longLineColor, lineWidth } = props
+    minimumScaleTime, offsetLeft, lineColor, longLineColor, lineWidth, crops = [] } = props
 
-  const [currentMinimumScale, setCurrentMinimumScale] = useState(minimumScale);
+  const [currentMinimumScale, setCurrentMinimumScale] = useState(minimumScale)
+  const [currentCrops, setCurrentCrops] = useState(crops)
 
   const drawMousePosition = useCallback((ctx: any) => {
     drawLine(ctx, 0, mouseY, 20, mouseY, "#ff0000", 2)
-  }, [mouseY]);
+  }, [mouseY])
+
+  const drawCrops = useCallback((ctx: any) => {
+    currentCrops.forEach((crop) => {
+      if (crop.start && crop.end) {
+        const s = (crop.start * currentMinimumScale) / minimumScaleTime
+        const e = (crop.end * currentMinimumScale) / minimumScaleTime
+
+        drawSolidRect(ctx, 0, s, 15, e, "#98CE8F")
+      }
+    })
+  }, [currentCrops, currentMinimumScale, minimumScaleTime]);
 
   const draw = useCallback((ctx: any) => {
     ctx.clearRect(0, 0, width, height)
@@ -106,6 +120,7 @@ const Timeline: React.FC<TimelineProps> = props => {
 
     const render = () => {
       draw(ctx)
+      drawCrops(ctx)
       drawMousePosition(ctx)
       animationFrame = window.requestAnimationFrame(render)
     }
@@ -115,7 +130,7 @@ const Timeline: React.FC<TimelineProps> = props => {
       window.cancelAnimationFrame(animationFrame)
     }
 
-  }, [mouseY, draw, drawMousePosition])
+  }, [mouseY, drawCrops, draw, drawMousePosition])
 
   return <canvas ref={ref} {...props}
     onMouseMove={(e) => {
@@ -126,9 +141,30 @@ const Timeline: React.FC<TimelineProps> = props => {
       setMouseY(y)
     }}
     onWheel={(e) => {
-      e.preventDefault();
-      const cur = currentMinimumScale + (e.deltaY * 0.01) * -1;
-      setCurrentMinimumScale(cur);
+      e.preventDefault()
+      const cur = currentMinimumScale + (e.deltaY * 0.01) * -1
+      setCurrentMinimumScale(cur)
+    }}
+    onClick={() => {
+      const time = mouseY / currentMinimumScale * minimumScaleTime
+
+      // "Incomplete crop" means a crop with start time only
+      const hasIncompleteCrop = currentCrops.some(crop => Object.keys(crop).length !== 2)
+
+      if (hasIncompleteCrop) {
+        const index = currentCrops?.findIndex(crop => Object.keys(crop).length !== 2)
+        let crop = currentCrops[index]
+
+        if (time > crop.start) {
+          currentCrops[index].end = time
+        } else {
+          currentCrops[index].start = time
+          currentCrops[index].end = crop.start
+        }
+      } else {
+        let crop: Crop = { start: time }
+        setCurrentCrops([...currentCrops, { ...crop }])
+      }
     }}
   />
 }
