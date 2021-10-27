@@ -1,4 +1,5 @@
-import { useCallback, useEffect, useRef, useState } from "react"
+import { Dispatch, SetStateAction, useCallback, useEffect, useRef, useState } from "react"
+import Crop from "./types/crop"
 
 interface TimelineProps {
   width: number
@@ -10,13 +11,9 @@ interface TimelineProps {
   offsetLeft: number
   lineColor: string
   longLineColor: string
-  crops?: Array<Crop>
+  crops: Array<Crop>
+  setCrops: Dispatch<SetStateAction<Array<Crop>>>
   setVideoTime(time: number): void
-}
-
-interface Crop {
-  start: number
-  end?: number
 }
 
 const calc = (width: number, minimumScale: number, minimumScaleTime: number) => {
@@ -70,25 +67,27 @@ const Timeline: React.FC<TimelineProps> = props => {
   const [mouseY, setMouseY] = useState(0.0)
 
   const { width, height, minimumScale, minimumScalesInLongScale,
-    minimumScaleTime, offsetLeft, lineColor, longLineColor, lineWidth, crops = [] } = props
+    minimumScaleTime, offsetLeft, lineColor, longLineColor, lineWidth, crops, setCrops } = props
 
   const [currentMinimumScale, setCurrentMinimumScale] = useState(minimumScale)
-  const [currentCrops, setCurrentCrops] = useState(crops)
+  // const [currentCrops, setCurrentCrops] = useState(crops)
 
   const drawMousePosition = useCallback((ctx: any) => {
     drawLine(ctx, 0, mouseY, 20, mouseY, "#ff0000", 2)
   }, [mouseY])
 
   const drawCrops = useCallback((ctx: any) => {
-    currentCrops.forEach((crop) => {
+    crops.forEach((crop) => {
       if (crop.start && crop.end) {
         const s = (crop.start * currentMinimumScale) / minimumScaleTime
         const e = (crop.end * currentMinimumScale) / minimumScaleTime
 
-        drawSolidRect(ctx, 0, s, 15, e, "#98CE8F")
+        const color = crop.selected ? "#B85C57" : "#98CE8F"
+
+        drawSolidRect(ctx, 0, s, 15, e, color)
       }
     })
-  }, [currentCrops, currentMinimumScale, minimumScaleTime]);
+  }, [crops, currentMinimumScale, minimumScaleTime])
 
   const draw = useCallback((ctx: any) => {
     ctx.clearRect(0, 0, width, height)
@@ -154,22 +153,39 @@ const Timeline: React.FC<TimelineProps> = props => {
     onClick={() => {
       const time = mouseY / currentMinimumScale * minimumScaleTime
 
+      crops.forEach(crop => crop.selected = false)
+      setCrops([...crops])
+
       // "Incomplete crop" means a crop with start time only
-      const hasIncompleteCrop = currentCrops.some(crop => Object.keys(crop).length !== 2)
+      const hasIncompleteCrop = crops.some(crop => !('end' in crop))
 
       if (hasIncompleteCrop) {
-        const index = currentCrops?.findIndex(crop => Object.keys(crop).length !== 2)
-        let crop = currentCrops[index]
+        const index = crops.findIndex(crop => !('end' in crop))
+        let crop = crops[index]
 
         if (time > crop.start) {
-          currentCrops[index].end = time
+          crops[index].end = time
         } else {
-          currentCrops[index].start = time
-          currentCrops[index].end = crop.start
+          crops[index].start = time
+          crops[index].end = crop.start
         }
+
+        setCrops([...crops])
       } else {
-        let crop: Crop = { start: time }
-        setCurrentCrops([...currentCrops, { ...crop }])
+        const selected = crops.find(crop => {
+          if (crop.start && crop.end)
+            return crop.start <= time && crop.end >= time
+        })
+
+        if (selected) {
+          const index = crops.findIndex(crop => crop === selected)
+          crops[index].selected = true
+
+          setCrops([...crops])
+        } else {
+          let crop: Crop = { start: time, texts: [], selected: false }
+          setCrops([...crops, { ...crop }])
+        }
       }
 
       props.setVideoTime(time)
