@@ -28,21 +28,23 @@ function App() {
 
   return (
     <div className="container">
-      <Timeline
-        width={250}
-        height={window.innerHeight}
-        minimumScale={10}
-        minimumScaleTime={1}
-        minimumScalesInLongScale={10}
-        lineWidth={1}
-        offsetLeft={0}
-        lineColor="#666"
-        longLineColor="#000"
-        setVideoTime={setCurrentVideoTime}
-        crops={crops}
-        setCrops={setCrops}
-      />
-      <div>
+      <div style={{ width: "10%" }}>
+        <Timeline
+          width={250}
+          height={window.innerHeight}
+          minimumScale={10}
+          minimumScaleTime={1}
+          minimumScalesInLongScale={10}
+          lineWidth={1}
+          offsetLeft={0}
+          lineColor="#666"
+          longLineColor="#000"
+          setVideoTime={setCurrentVideoTime}
+          crops={crops}
+          setCrops={setCrops}
+        />
+      </div>
+      <div style={{ width: "40%", padding: "1rem", height: "100%", overflowY: "auto" }}>
         {isDialogOpen &&
           <Dialog>
             <div className="container">
@@ -52,7 +54,7 @@ function App() {
 
                 if (selected !== undefined) {
                   const i = crops.findIndex(crop => crop === selected)
-                  const t: Text = {order: selected.texts.length, value: currentText}
+                  const t: Text = { order: selected.texts.length, value: currentText }
                   crops[i].texts = [...crops[i].texts, t]
                   setCrops(crops)
                   setDialogOpen(false)
@@ -61,8 +63,24 @@ function App() {
               }}>Ok</button>
             </div>
           </Dialog>}
+
+
+        {crops.map((crop, i) => {
+          return (
+            <div key={i} className="card" style={{ margin: "1rem" }}>
+              <div style={{marginBottom: "0.4rem"}}><span className="badge">{i+1}</span></div>
+              <div><span>{crop.start}</span> ➡️ <span>{crop.end}</span></div>
+              <div>
+                {crop.texts.map((text, i) => {
+                  return <p key={i}>{text.value}</p>
+                })}
+              </div>
+            </div>)
+        })}
       </div>
-      <Video src="/BigBuckBunny.mp4" width="640" height="480" controls={true} currentTime={currentVideoTime} />
+      <div style={{ width: "50%" }}>
+        <Video src="/BigBuckBunny.mp4" width="640" height="480" controls={true} currentTime={currentVideoTime} />
+      </div>
     </div>
   )
 }
