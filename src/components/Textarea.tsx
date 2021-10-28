@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction } from "react"
-import "./Textarea.css"
+import "./styles/Textarea.css"
 
 interface TextareaProps {
   value?: string

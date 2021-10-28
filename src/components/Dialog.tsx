@@ -1,5 +1,5 @@
 import { ReactElement } from "react";
-import "./Dialog.css"
+import "./styles/Dialog.css"
 
 interface DialogProps {
   children?: ReactElement

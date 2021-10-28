@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import Timeline from "./Timeline";
-import Video from "./Video";
+import Timeline from "./components/Timeline";
+import Video from "./components/Video";
 
 import "./App.css"
-import Dialog from "./Dialog";
-import Textarea from "./Textarea";
+import Dialog from "./components/Dialog";
+import Textarea from "./components/Textarea";
 import Crop from "./types/crop";
 import Text from "./types/text";
 

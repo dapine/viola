@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction, useCallback, useEffect, useRef, useState } from "react"
-import Crop from "./types/crop"
+import Crop from "../types/crop"
 
 interface TimelineProps {
   width: number
