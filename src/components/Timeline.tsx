@@ -70,7 +70,6 @@ const Timeline: React.FC<TimelineProps> = props => {
     minimumScaleTime, offsetLeft, lineColor, longLineColor, lineWidth, crops, setCrops } = props
 
   const [currentMinimumScale, setCurrentMinimumScale] = useState(minimumScale)
-  // const [currentCrops, setCurrentCrops] = useState(crops)
 
   const drawMousePosition = useCallback((ctx: any) => {
     drawLine(ctx, 0, mouseY, 20, mouseY, "#ff0000", 2)
