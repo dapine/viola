@@ -11,7 +11,7 @@ interface VideoProps {
 const Video: React.FC<VideoProps> = props => {
   const { src, width, height, controls = false } = props
 
-  const { state, dispatch } = useContext(StoreContext)
+  const { state } = useContext(StoreContext)
 
   const ref = useRef(null)
 

@@ -7,7 +7,7 @@ import Crop from "../types/crop"
 
 const Editor: React.FC = () => {
 
-  const {state, dispatch} = useContext(StoreContext)
+  const { state } = useContext(StoreContext)
 
   return (
     <div className="container">

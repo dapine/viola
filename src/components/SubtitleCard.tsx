@@ -15,7 +15,7 @@ const SubtitleCard: React.FC<SubtitleCardProps> = props => {
 
   const [isTextareaVisible, setTextareaVisible] = useState(false)
 
-  const { state, dispatch } = useContext(StoreContext)
+  const { dispatch } = useContext(StoreContext)
 
   return (
     <div key={key} className="card" style={{ margin: "1rem" }}>

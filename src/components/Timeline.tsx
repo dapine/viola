@@ -15,14 +15,6 @@ interface TimelineProps {
   longLineColor: string
 }
 
-const calc = (width: number, minimumScale: number, minimumScaleTime: number) => {
-  const ticks = Math.floor(width / minimumScale)
-  const duration = ticks * minimumScaleTime
-  const scale = minimumScaleTime / minimumScale
-
-  return { ticks: ticks, duration: duration, scale: scale }
-}
-
 const formatSeconds = (value: number) => {
   let result = Math.floor(value)
   let hh =
@@ -173,8 +165,7 @@ const Timeline: React.FC<TimelineProps> = props => {
         dispatch({ type: ActionType.REPLACE_CROP, payload: { index: index, crop: crop } })
       } else {
         const selected = state.crops.find((crop: Crop) => {
-          if (crop.start && crop.end)
-            return crop.start <= time && crop.end >= time
+            return crop.start <= time && crop.end! >= time
         })
 
         if (selected) {
