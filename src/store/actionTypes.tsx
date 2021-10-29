@@ -1,0 +1,8 @@
+export enum ActionType {
+  SET_CURRENT_VIDEO_TIME,
+
+  SELECT_CROP,
+  DESELECT_ALL_CROPS,
+  ADD_CROP,
+  REPLACE_CROP,
+}

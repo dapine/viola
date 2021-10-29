@@ -1,21 +1,21 @@
-import { Dispatch, SetStateAction, useState } from "react"
+import { useContext, useState } from "react"
+import { ActionType } from "../store/actionTypes"
+import { StoreContext } from "../store/StoreContext"
 import Crop from "../types/crop"
 import Text from "../types/text"
-
 import "./styles/SubtitleCard.css"
-
 interface SubtitleCardProps {
   id: number
   key?: string
   crop: Crop
-  crops: Array<Crop>
-  setCrops: Dispatch<SetStateAction<Array<Crop>>>
 }
 
 const SubtitleCard: React.FC<SubtitleCardProps> = props => {
-  const { key, crop, id, crops, setCrops } = props
+  const { key, crop, id } = props
 
   const [isTextareaVisible, setTextareaVisible] = useState(false)
+
+  const { state, dispatch } = useContext(StoreContext)
 
   return (
     <div key={key} className="card" style={{ margin: "1rem" }}>
@@ -34,8 +34,11 @@ const SubtitleCard: React.FC<SubtitleCardProps> = props => {
             onBlur={(e) => {
               const t: Text = { order: crop.texts.length, value: e.target.value }
               crop.texts = [...crop.texts, t]
-              crops[id] = crop
-              setCrops(crops)
+              // TODO: test
+              dispatch({ type: ActionType.REPLACE_CROP, payload: {index: id, crop: crop} })
+
+              // state.crops[id] = crop
+              // setCrops(crops)
               setTextareaVisible(false)
             }} />
         </div>}

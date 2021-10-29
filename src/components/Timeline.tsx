@@ -1,4 +1,6 @@
-import { Dispatch, SetStateAction, useCallback, useEffect, useRef, useState } from "react"
+import { useCallback, useContext, useEffect, useRef, useState } from "react"
+import { ActionType } from "../store/actionTypes"
+import { StoreContext } from "../store/StoreContext"
 import Crop from "../types/crop"
 
 interface TimelineProps {
@@ -11,9 +13,6 @@ interface TimelineProps {
   offsetLeft: number
   lineColor: string
   longLineColor: string
-  crops: Array<Crop>
-  setCrops: Dispatch<SetStateAction<Array<Crop>>>
-  setVideoTime(time: number): void
 }
 
 const calc = (width: number, minimumScale: number, minimumScaleTime: number) => {
@@ -66,8 +65,10 @@ const Timeline: React.FC<TimelineProps> = props => {
   const ref = useRef(null)
   const [mouseY, setMouseY] = useState(0.0)
 
+  const { state, dispatch } = useContext(StoreContext)
+
   const { width, height, minimumScale, minimumScalesInLongScale,
-    minimumScaleTime, offsetLeft, lineColor, longLineColor, lineWidth, crops, setCrops } = props
+    minimumScaleTime, offsetLeft, lineColor, longLineColor, lineWidth } = props
 
   const [currentMinimumScale, setCurrentMinimumScale] = useState(minimumScale)
 
@@ -76,7 +77,7 @@ const Timeline: React.FC<TimelineProps> = props => {
   }, [mouseY])
 
   const drawCrops = useCallback((ctx: any) => {
-    crops.forEach((crop) => {
+    state.crops.forEach((crop: Crop) => {
       if (crop.start && crop.end) {
         const s = (crop.start * currentMinimumScale) / minimumScaleTime
         const e = (crop.end * currentMinimumScale) / minimumScaleTime
@@ -86,7 +87,7 @@ const Timeline: React.FC<TimelineProps> = props => {
         drawSolidRect(ctx, 0, s, 15, e, color)
       }
     })
-  }, [crops, currentMinimumScale, minimumScaleTime])
+  }, [state.crops, currentMinimumScale, minimumScaleTime])
 
   const draw = useCallback((ctx: any) => {
     ctx.clearRect(0, 0, width, height)
@@ -141,7 +142,7 @@ const Timeline: React.FC<TimelineProps> = props => {
 
       if (e.ctrlKey) {
         const time = mouseY / minimumScale * minimumScaleTime
-        props.setVideoTime(time)
+        dispatch({ type: ActionType.SET_CURRENT_VIDEO_TIME, payload: time })
       }
     }}
     onWheel={(e) => {
@@ -152,42 +153,41 @@ const Timeline: React.FC<TimelineProps> = props => {
     onClick={() => {
       const time = mouseY / currentMinimumScale * minimumScaleTime
 
-      crops.forEach(crop => crop.selected = false)
-      setCrops([...crops])
+      dispatch({ type: ActionType.DESELECT_ALL_CROPS })
 
       // "Incomplete crop" means a crop with start time only
-      const hasIncompleteCrop = crops.some(crop => !('end' in crop))
+      const hasIncompleteCrop = state.crops.some((crop: Crop) => !('end' in crop))
 
+      // XXX: rewrite this in a more functional/immutable way
       if (hasIncompleteCrop) {
-        const index = crops.findIndex(crop => !('end' in crop))
-        let crop = crops[index]
+        const index = state.crops.findIndex((crop: Crop) => !('end' in crop))
+        let crop: Crop = state.crops[index]
 
         if (time > crop.start) {
-          crops[index].end = time
+          crop.end = time
         } else {
-          crops[index].start = time
-          crops[index].end = crop.start
+          crop.end = crop.start
+          crop.start = time
         }
 
-        setCrops([...crops])
+        dispatch({ type: ActionType.REPLACE_CROP, payload: { index: index, crop: crop } })
       } else {
-        const selected = crops.find(crop => {
+        const selected = state.crops.find((crop: Crop) => {
           if (crop.start && crop.end)
             return crop.start <= time && crop.end >= time
         })
 
         if (selected) {
-          const index = crops.findIndex(crop => crop === selected)
-          crops[index].selected = true
+          const index = state.crops.findIndex((crop: Crop) => crop === selected)
 
-          setCrops([...crops])
+          dispatch({ type: ActionType.SELECT_CROP, payload: index })
         } else {
           let crop: Crop = { start: time, texts: [], selected: false }
-          setCrops([...crops, { ...crop }])
+          dispatch({ type: ActionType.ADD_CROP, payload: { crop: crop } })
         }
       }
 
-      props.setVideoTime(time)
+      dispatch({ type: ActionType.SET_CURRENT_VIDEO_TIME, payload: time })
     }}
   />
 }

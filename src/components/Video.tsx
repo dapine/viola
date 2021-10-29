@@ -1,15 +1,17 @@
-import { useEffect, useRef } from "react"
+import { useContext, useEffect, useRef } from "react"
+import { StoreContext } from "../store/StoreContext"
 
 interface VideoProps {
   src: string
   width: string
   height: string
   controls?: boolean
-  currentTime: number
 }
 
 const Video: React.FC<VideoProps> = props => {
-  const { src, width, height, controls = false, currentTime } = props
+  const { src, width, height, controls = false } = props
+
+  const { state, dispatch } = useContext(StoreContext)
 
   const ref = useRef(null)
 
@@ -17,8 +19,8 @@ const Video: React.FC<VideoProps> = props => {
     const video = ref?.current
 
     // @ts-ignore: Object is possibly 'null'.
-    video.currentTime = currentTime
-  }, [currentTime]);
+    video.currentTime = state.currentVideoTime
+  }, [state.currentVideoTime]);
 
   return <video ref={ref} src={src} width={width} height={height} controls={controls} />
 }
