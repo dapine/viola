@@ -2,6 +2,7 @@ import { useCallback, useContext, useEffect, useRef, useState } from "react"
 import { ActionType } from "../store/actionTypes"
 import { StoreContext } from "../store/StoreContext"
 import Crop from "../types/crop"
+import { formatSeconds } from "../utils/utils"
 
 interface TimelineProps {
   width: number
@@ -13,23 +14,6 @@ interface TimelineProps {
   offsetLeft: number
   lineColor: string
   longLineColor: string
-}
-
-const formatSeconds = (value: number) => {
-  let result = Math.floor(value)
-  let hh =
-    Math.floor(result / 3600) < 10
-      ? "0" + Math.floor(result / 3600)
-      : Math.floor(result / 3600)
-  let mm =
-    Math.floor((result / 60) % 60) < 10
-      ? "0" + Math.floor((result / 60) % 60)
-      : Math.floor((result / 60) % 60)
-  let ss =
-    Math.floor(result % 60) < 10
-      ? "0" + Math.floor(result % 60)
-      : Math.floor(result % 60)
-  return `${hh}:${mm}:${ss}`
 }
 
 const drawLine = (ctx: any, beginX: number, beginY: number, endX: number,

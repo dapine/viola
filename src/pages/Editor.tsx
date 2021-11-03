@@ -1,16 +1,30 @@
 import { useContext } from "react"
+import { saveAs } from "file-saver"
 import SubtitleCard from "../components/SubtitleCard"
 import Timeline from "../components/Timeline"
 import Video from "../components/Video"
+import { toSrt } from "../exporters/srt"
 import { StoreContext } from "../store/StoreContext"
 import Crop from "../types/crop"
 
 const Editor: React.FC = () => {
-
   const { state } = useContext(StoreContext)
+
+  const exportSrt = () => {
+    const captions: string = toSrt(state.crops).join('')
+    const blob = new Blob([captions], {type: "text/plain;charset=utf-8"})
+    saveAs(blob, "output.srt")
+  }
+
+  const copyToClipboard = () => {
+    const captions: string = toSrt(state.crops).join('')
+    navigator.clipboard.writeText(captions)
+  }
 
   return (
     <>
+      <button disabled={state.crops.length === 0} onClick={() => exportSrt()}>export to .srt</button>
+      <button disabled={state.crops.length === 0} onClick={() => copyToClipboard()}>copy to clipboard</button>
       <div className="container">
         <div style={{ width: "10%" }}>
           <Timeline
