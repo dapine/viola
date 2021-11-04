@@ -149,7 +149,7 @@ const Timeline: React.FC<TimelineProps> = props => {
         dispatch({ type: ActionType.REPLACE_CROP, payload: { index: index, crop: crop } })
       } else {
         const selected = state.crops.find((crop: Crop) => {
-            return crop.start <= time && crop.end! >= time
+          return crop.start <= time && crop.end! >= time
         })
 
         if (selected) {
@@ -159,6 +159,10 @@ const Timeline: React.FC<TimelineProps> = props => {
         } else {
           let crop: Crop = { start: time, texts: [], selected: false }
           dispatch({ type: ActionType.ADD_CROP, payload: { crop: crop } })
+          const sorted = state.crops.sort((a: Crop, b: Crop) => {
+            return a.start - b.start
+          })
+          dispatch({ type: ActionType.REPLACE_ALL_CROPS, payload: { crops: sorted } })
         }
       }
 

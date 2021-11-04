@@ -5,4 +5,5 @@ export enum ActionType {
   DESELECT_ALL_CROPS,
   ADD_CROP,
   REPLACE_CROP,
+  REPLACE_ALL_CROPS,
 }

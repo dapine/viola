@@ -50,6 +50,8 @@ export const reducer = (state: any, action: any) => {
       })
 
       return state
+    case ActionType.REPLACE_ALL_CROPS:
+      return { ...state, crops: action.payload.crops }
     default:
       return state
   }

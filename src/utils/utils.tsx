@@ -18,7 +18,6 @@ export const formatSeconds = (value: number): string => {
 export const formatMiliSeconds = (value: number): string => {
   let result = Math.floor(value)
   let mili =  value % 1
-  console.log(value, mili * 1000)
   let hh =
     Math.floor(result / 3600) < 10
       ? "0" + Math.floor(result / 3600)

@@ -3,6 +3,7 @@ import { ActionType } from "../store/actionTypes"
 import { StoreContext } from "../store/StoreContext"
 import Crop from "../types/crop"
 import Text from "../types/text"
+import { formatMiliSeconds } from "../utils/utils"
 import "./styles/SubtitleCard.css"
 interface SubtitleCardProps {
   id: number
@@ -20,7 +21,7 @@ const SubtitleCard: React.FC<SubtitleCardProps> = props => {
   return (
     <div key={subKey} className="card" style={{ margin: "1rem" }}>
       <div style={{ marginBottom: "0.4rem" }}><span className="badge">{subKey}</span></div>
-      <div><span>{crop.start}</span> ➡️ <span>{crop.end}</span></div>
+      <div><span>{formatMiliSeconds(crop.start)}</span> ➡️ <span>{crop.end && formatMiliSeconds(crop.end)}</span></div>
       <div>
         {crop.texts.map((text, i) => {
           return <p key={i}>{text.value}</p>
