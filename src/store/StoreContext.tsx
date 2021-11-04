@@ -1,4 +1,5 @@
 import { createContext, useReducer } from "react"
+import { TimelineProps } from "../components/Timeline"
 import Crop from "../types/crop"
 import { ActionType } from "./actionTypes"
 
@@ -11,6 +12,8 @@ interface StoreContextReducer {
 
 interface StateType {
   currentVideoTime: number
+  videoDuration: number
+  timelineConfig: TimelineProps
   crops: Array<Crop>
 }
 
@@ -20,6 +23,18 @@ interface StoreProviderProps {
 
 export const initialState: StateType = {
   currentVideoTime: 0.0,
+  videoDuration: 0.0,
+  timelineConfig: {
+    width: 80,
+    height: window.innerHeight,
+    minimumScale: 10,
+    minimumScaleTime: 1,
+    minimumScalesInLongScale: 10,
+    lineWidth: 1,
+    offsetLeft: 0,
+    lineColor: "#666",
+    longLineColor: "#000",
+  },
   crops: []
 }
 
@@ -28,6 +43,8 @@ export const reducer = (state: any, action: any) => {
   switch (action.type) {
     case ActionType.SET_CURRENT_VIDEO_TIME:
       return { ...state, currentVideoTime: action.payload }
+    case ActionType.SET_VIDEO_DURATION:
+      return { ...state, videoDuration: action.payload }
     case ActionType.SELECT_CROP:
       state.crops.forEach((crop: Crop, i: number) => {
         if (i === action.payload) {
@@ -52,6 +69,10 @@ export const reducer = (state: any, action: any) => {
       return state
     case ActionType.REPLACE_ALL_CROPS:
       return { ...state, crops: action.payload.crops }
+    case ActionType.SET_TIMELINE_HEIGHT:
+      return { ...state, timelineConfig: { ...state.timelineConfig, height: action.payload } }
+    case ActionType.SET_TIMELINE_MINIMUM_SCALE:
+      return { ...state, timelineConfig: { ...state.timelineConfig, minimumScale: action.payload } }
     default:
       return state
   }

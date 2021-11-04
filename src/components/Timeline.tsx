@@ -4,7 +4,7 @@ import { StoreContext } from "../store/StoreContext"
 import Crop from "../types/crop"
 import { formatSeconds } from "../utils/utils"
 
-interface TimelineProps {
+export interface TimelineProps {
   width: number
   height: number
   minimumScale: number
@@ -46,8 +46,6 @@ const Timeline: React.FC<TimelineProps> = props => {
   const { width, height, minimumScale, minimumScalesInLongScale,
     minimumScaleTime, offsetLeft, lineColor, longLineColor, lineWidth } = props
 
-  const [currentMinimumScale, setCurrentMinimumScale] = useState(minimumScale)
-
   const drawMousePosition = useCallback((ctx: any) => {
     drawLine(ctx, 0, mouseY, 20, mouseY, "#ff0000", 2)
   }, [mouseY])
@@ -55,15 +53,15 @@ const Timeline: React.FC<TimelineProps> = props => {
   const drawCrops = useCallback((ctx: any) => {
     state.crops.forEach((crop: Crop) => {
       if (crop.start && crop.end) {
-        const s = (crop.start * currentMinimumScale) / minimumScaleTime
-        const e = (crop.end * currentMinimumScale) / minimumScaleTime
+        const s = (crop.start * minimumScale) / minimumScaleTime
+        const e = (crop.end * minimumScale) / minimumScaleTime
 
         const color = crop.selected ? "#B85C57" : "#98CE8F"
 
         drawSolidRect(ctx, 0, s, 15, e, color)
       }
     })
-  }, [state.crops, currentMinimumScale, minimumScaleTime])
+  }, [state.crops, minimumScale, minimumScaleTime])
 
   const draw = useCallback((ctx: any) => {
     ctx.clearRect(0, 0, width, height)
@@ -74,17 +72,17 @@ const Timeline: React.FC<TimelineProps> = props => {
     const beginX = 0
     const endX = 20
 
-    for (let i = 0; i < height; i += currentMinimumScale) {
-      if (i % (currentMinimumScale * minimumScalesInLongScale) === 0) {
+    for (let i = 0; i < height; i += minimumScale) {
+      if (i % (minimumScale * minimumScalesInLongScale) === 0) {
         drawLine(ctx, beginX, i + offsetLeft, endX, i + offsetLeft, longLineColor, lineWidth)
 
-        const showTime = (i / currentMinimumScale) * minimumScaleTime
+        const showTime = (i / minimumScale) * minimumScaleTime
         ctx.fillText(formatSeconds(showTime), endX, i + offsetLeft)
       } else {
         drawLine(ctx, beginX, i + offsetLeft, 10, i + offsetLeft, lineColor, lineWidth)
       }
     }
-  }, [width, height, currentMinimumScale, minimumScalesInLongScale, offsetLeft, lineColor,
+  }, [width, height, minimumScale, minimumScalesInLongScale, offsetLeft, lineColor,
     lineWidth, longLineColor, minimumScaleTime])
 
   useEffect(() => {
@@ -123,11 +121,13 @@ const Timeline: React.FC<TimelineProps> = props => {
     }}
     onWheel={(e) => {
       e.preventDefault()
-      const cur = currentMinimumScale + (e.deltaY * 0.01) * -1
-      setCurrentMinimumScale(cur)
+      const cur = minimumScale + (e.deltaY * 0.01) * -1
+      const newHeight = height + (e.deltaY * 7) * -1
+      dispatch({ type: ActionType.SET_TIMELINE_MINIMUM_SCALE, payload: cur })
+      dispatch({ type: ActionType.SET_TIMELINE_HEIGHT, payload: newHeight })
     }}
     onClick={() => {
-      const time = mouseY / currentMinimumScale * minimumScaleTime
+      const time = mouseY / minimumScale * minimumScaleTime
 
       dispatch({ type: ActionType.DESELECT_ALL_CROPS })
 

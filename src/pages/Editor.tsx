@@ -1,5 +1,5 @@
-import { useContext } from "react"
 import { saveAs } from "file-saver"
+import { useContext } from "react"
 import SubtitleCard from "../components/SubtitleCard"
 import Timeline from "../components/Timeline"
 import Video from "../components/Video"
@@ -26,18 +26,8 @@ const Editor: React.FC = () => {
       <button disabled={state.crops.length === 0} onClick={() => exportSrt()}>export to .srt</button>
       <button disabled={state.crops.length === 0} onClick={() => copyToClipboard()}>copy to clipboard</button>
       <div className="container">
-        <div style={{ width: "10%" }}>
-          <Timeline
-            width={100}
-            height={window.innerHeight}
-            minimumScale={10}
-            minimumScaleTime={1}
-            minimumScalesInLongScale={10}
-            lineWidth={1}
-            offsetLeft={0}
-            lineColor="#666"
-            longLineColor="#000"
-          />
+        <div style={{ width: "10%", height: window.innerHeight, overflowY: "auto" }}>
+          <Timeline {...state.timelineConfig} />
         </div>
         <div style={{ width: "40%", padding: "1rem", height: "100%", overflowY: "auto" }}>
           {
