@@ -73,6 +73,10 @@ export const reducer = (state: any, action: any) => {
       return { ...state, timelineConfig: { ...state.timelineConfig, height: action.payload } }
     case ActionType.SET_TIMELINE_MINIMUM_SCALE:
       return { ...state, timelineConfig: { ...state.timelineConfig, minimumScale: action.payload } }
+    case ActionType.REPLACE_ALL_TEXTS_FROM_CROP:
+      state.crops[action.payload.cropIndex].texts = action.payload.texts
+
+      return { ...state }
     default:
       return state
   }

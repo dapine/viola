@@ -6,6 +6,8 @@ import Video from "../components/Video"
 import { toSrt } from "../exporters/srt"
 import { StoreContext } from "../store/StoreContext"
 import Crop from "../types/crop"
+import { DndProvider } from 'react-dnd'
+import { HTML5Backend } from "react-dnd-html5-backend"
 
 const Editor: React.FC = () => {
   const { state } = useContext(StoreContext)
@@ -29,13 +31,15 @@ const Editor: React.FC = () => {
         <div style={{ width: "10%", height: window.innerHeight, overflowY: "auto" }}>
           <Timeline {...state.timelineConfig} />
         </div>
-        <div style={{ width: "40%", padding: "1rem", height: "100%", overflowY: "auto" }}>
-          {
-            state.crops.map((crop: Crop, i: number) =>
-              <SubtitleCard id={i} subKey={(i + 1).toString()} crop={crop} />
-            )
-          }
-        </div>
+        <DndProvider backend={HTML5Backend}>
+          <div style={{ width: "40%", padding: "1rem", height: "100%", overflowY: "auto" }}>
+            {
+              state.crops.map((crop: Crop, i: number) =>
+                <SubtitleCard id={i} subKey={(i + 1).toString()} crop={crop} />
+              )
+            }
+          </div>
+        </DndProvider>
         <div style={{ width: "50%" }}>
           <Video src="/BigBuckBunny.mp4" width="640" height="480" controls={true} />
         </div>

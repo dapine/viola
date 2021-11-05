@@ -1,4 +1,4 @@
 export default interface Text {
-  order: number
+  index: number
   value: string
 }
