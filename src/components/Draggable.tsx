@@ -1,10 +1,10 @@
-import { useRef } from "react"
+import React, { useRef } from "react"
 import { DropTargetMonitor, useDrag, useDrop, XYCoord } from "react-dnd"
 
 interface DraggableProps {
-  id: number,
-  index: number,
-  text: string,
+  id: number
+  index: number
+  children: any
   moveCard: (dragIndex: number, hoverIndex: number) => void
 }
 
@@ -14,7 +14,7 @@ interface DragItem {
   type: string
 }
 
-const Draggable: React.FC<DraggableProps> = ({ id, index, text, moveCard }) => {
+const Draggable: React.FC<DraggableProps> = ({ id, index, children, moveCard }) => {
   const ref = useRef<HTMLDivElement>(null)
 
   const [{ handlerId }, drop] = useDrop({
@@ -90,7 +90,7 @@ const Draggable: React.FC<DraggableProps> = ({ id, index, text, moveCard }) => {
 
   return (
     <div ref={ref} style={{ opacity }} data-handler-id={handlerId}>
-      {text}
+      {children}
     </div>
   );
 }

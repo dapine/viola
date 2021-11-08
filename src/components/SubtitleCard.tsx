@@ -7,6 +7,9 @@ import { formatMiliSeconds } from "../utils/utils"
 import Draggable from "./Draggable"
 import "./styles/SubtitleCard.css"
 import update from 'immutability-helper'
+import Editable from "./Editable"
+import { DndProvider } from "react-dnd"
+import { HTML5Backend } from "react-dnd-html5-backend"
 interface SubtitleCardProps {
   id: number
   subKey: string
@@ -36,29 +39,41 @@ const SubtitleCard: React.FC<SubtitleCardProps> = props => {
   )
 
   return (
-    <div key={subKey} className="card" style={{ margin: "1rem" }}>
-      <div style={{ marginBottom: "0.4rem" }}><span className="badge">{subKey}</span></div>
-      <div><span>{formatMiliSeconds(crop.start)}</span> ➡️ <span>{crop.end && formatMiliSeconds(crop.end)}</span></div>
-      <div>
-        {crop.texts.map((text, i) => {
-          return <Draggable id={i} index={i} moveCard={moveCard} text={text.value} />
-        })}
-      </div>
-      {isTextareaVisible &&
+    <DndProvider backend={HTML5Backend}>
+      <div key={subKey} className="card" style={{ margin: "1rem" }}>
+        <div style={{ marginBottom: "0.4rem" }}><span className="badge">{subKey}</span></div>
+        <div><span>{formatMiliSeconds(crop.start)}</span> ➡️ <span>{crop.end && formatMiliSeconds(crop.end)}</span></div>
         <div>
-          <textarea
-            className="textarea"
-            style={{ resize: "none" }}
-            onBlur={(e) => {
-              const t: Text = { index: crop.texts.length, value: e.target.value }
-              crop.texts = [...crop.texts, t]
-              dispatch({ type: ActionType.REPLACE_CROP, payload: { index: id, crop: crop } })
+          {crop.texts.map((text, i) => {
+            return (
+              <Draggable id={i} index={i} moveCard={moveCard}>
+                <Editable
+                  value={text.value}
+                  onChange={(e) => {
+                    dispatch({
+                      type: ActionType.REPLACE_TEXT_FROM_CROP,
+                      payload: { cropIndex: id, textIndex: i, textValue: e.target.value }
+                    })
+                  }} />
+              </Draggable>)
+          })}
+        </div>
+        {isTextareaVisible &&
+          <div>
+            <textarea
+              className="textarea"
+              style={{ resize: "none" }}
+              onBlur={(e) => {
+                const t: Text = { index: crop.texts.length, value: e.target.value }
+                crop.texts = [...crop.texts, t]
+                dispatch({ type: ActionType.REPLACE_CROP, payload: { index: id, crop: crop } })
 
-              setTextareaVisible(false)
-            }} />
-        </div>}
-      <div><button onClick={() => setTextareaVisible(true)}>new</button></div>
-    </div>
+                setTextareaVisible(false)
+              }} />
+          </div>}
+        <div><button onClick={() => setTextareaVisible(true)}>new</button></div>
+      </div>
+    </DndProvider >
   )
 }
 
