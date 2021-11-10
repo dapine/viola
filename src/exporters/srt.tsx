@@ -12,3 +12,7 @@ ${crop.texts.map((text) => text.value).join('\n')}
 export const toSrt = (crops: Array<Crop>): Array<string> => {
   return crops.map((crop, i) => toSrtFormat(crop, i+1))
 }
+
+export const toSrtString = (crops: Array<Crop>): string => {
+  return toSrt(crops).join('')
+}
