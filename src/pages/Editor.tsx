@@ -1,30 +1,32 @@
-import { saveAs } from "file-saver"
-import { useContext } from "react"
+import { useContext, useEffect, useState } from "react"
 import SubtitleCard from "../components/SubtitleCard"
 import Timeline from "../components/Timeline"
 import Video from "../components/Video"
-import { toSrt } from "../exporters/srt"
+import { toSrtString } from "../exporters/srt"
 import { StoreContext } from "../store/StoreContext"
 import Crop from "../types/crop"
+
+const electron = window.require("electron")
 
 const Editor: React.FC = () => {
   const { state } = useContext(StoreContext)
 
-  const exportSrt = () => {
-    const captions: string = toSrt(state.crops).join('')
-    const blob = new Blob([captions], { type: "text/plain;charset=utf-8" })
-    saveAs(blob, "output.srt")
-  }
+  const [videoPath, setVideoPath] = useState("")
 
-  const copyToClipboard = () => {
-    const captions: string = toSrt(state.crops).join('')
-    navigator.clipboard.writeText(captions)
-  }
+  useEffect(() => {
+    electron.ipcRenderer.on('FILE_OPEN', (e: any, data: any) => {
+      if (data.length > 0) setVideoPath(data[0])
+    })
+    electron.ipcRenderer.on('EXPORT_SRT', (e: any, filepath: string) => {
+      if (filepath) {
+        const content: string = toSrtString(state.crops)
+        electron.ipcRenderer.send('EXPORT_SRT', { filepath: filepath, content: content })
+      }
+    })
+  }, [])
 
   return (
     <>
-      <button disabled={state.crops.length === 0} onClick={() => exportSrt()}>export to .srt</button>
-      <button disabled={state.crops.length === 0} onClick={() => copyToClipboard()}>copy to clipboard</button>
       <div className="container">
         <div style={{ width: "10%", height: window.innerHeight, overflowY: "auto" }}>
           <Timeline {...state.timelineConfig} />
@@ -37,7 +39,7 @@ const Editor: React.FC = () => {
           }
         </div>
         <div style={{ width: "50%" }}>
-          <Video src="/BigBuckBunny.mp4" width="640" height="480" controls={true} />
+          <Video src={videoPath} width="640" height="480" controls={true} />
         </div>
       </div>
     </>
