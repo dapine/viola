@@ -1,9 +1,8 @@
-import { saveAs } from "file-saver"
 import { useContext, useEffect, useState } from "react"
 import SubtitleCard from "../components/SubtitleCard"
 import Timeline from "../components/Timeline"
 import Video from "../components/Video"
-import { toSrt, toSrtString } from "../exporters/srt"
+import { toSrtString } from "../exporters/srt"
 import { StoreContext } from "../store/StoreContext"
 import Crop from "../types/crop"
 

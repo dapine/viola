@@ -1,5 +1,19 @@
 const { app, BrowserWindow, Menu, dialog, ipcMain } = require('electron')
+const electron = require("electron")
 const fs = require('fs')
+const path = require('path')
+
+// copied from electron-is-dev (https://github.com/sindresorhus/electron-is-dev)
+function isElectronDev(electron) {
+  if (typeof electron === 'string') {
+    throw new TypeError('Not running in an Electron environment!')
+  }
+
+  const isEnvSet = 'ELECTRON_IS_DEV' in process.env;
+  const getFromEnv = Number.parseInt(process.env.ELECTRON_IS_DEV, 10) === 1
+
+  return isEnvSet ? getFromEnv : !electron.app.isPackaged
+}
 
 function createWindow() {
   const win = new BrowserWindow({
@@ -46,7 +60,7 @@ function createWindow() {
               click() {
                 dialog.showSaveDialog({
                   filters: [
-                    {name: 'SubRip', extensions: ['srt']}
+                    { name: 'SubRip', extensions: ['srt'] }
                   ]
                 })
                   .then(function (fileObj) {
@@ -73,7 +87,12 @@ function createWindow() {
 
   Menu.setApplicationMenu(menu)
 
-  win.loadURL('http://localhost:3000');
+  const url = isElectronDev(electron) ? 'http://localhost:3000' : `file://${path.join(__dirname, '../build/index.html')}`
+
+  console.log('electron: ' + isElectronDev(electron))
+  console.log('url: ' + url)
+
+  win.loadURL(url);
 
   win.webContents.openDevTools()
 }
