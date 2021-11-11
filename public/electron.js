@@ -89,12 +89,7 @@ function createWindow() {
 
   const url = isElectronDev(electron) ? 'http://localhost:3000' : `file://${path.join(__dirname, '../build/index.html')}`
 
-  console.log('electron: ' + isElectronDev(electron))
-  console.log('url: ' + url)
-
   win.loadURL(url);
-
-  win.webContents.openDevTools()
 }
 
 app.whenReady().then(createWindow)

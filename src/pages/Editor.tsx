@@ -5,24 +5,29 @@ import Video from "../components/Video"
 import { toSrtString } from "../exporters/srt"
 import { StoreContext } from "../store/StoreContext"
 import Crop from "../types/crop"
+import isElectron from "../utils/isElectron"
 
-const electron = window.require("electron")
+const electron = isElectron() ? window.require("electron") : undefined
+// auto load video when in browser/dev
+const defaultVideoPath = isElectron() ? "" : "/BigBuckBunny.mp4"
 
 const Editor: React.FC = () => {
   const { state } = useContext(StoreContext)
 
-  const [videoPath, setVideoPath] = useState("")
+  const [videoPath, setVideoPath] = useState(defaultVideoPath)
 
   useEffect(() => {
-    electron.ipcRenderer.on('FILE_OPEN', (e: any, data: any) => {
-      if (data.length > 0) setVideoPath(data[0])
-    })
-    electron.ipcRenderer.on('EXPORT_SRT', (e: any, filepath: string) => {
-      if (filepath) {
-        const content: string = toSrtString(state.crops)
-        electron.ipcRenderer.send('EXPORT_SRT', { filepath: filepath, content: content })
-      }
-    })
+    if (isElectron()) {
+      electron.ipcRenderer.on('FILE_OPEN', (e: any, data: any) => {
+        if (data.length > 0) setVideoPath(data[0])
+      })
+      electron.ipcRenderer.on('EXPORT_SRT', (e: any, filepath: string) => {
+        if (filepath) {
+          const content: string = toSrtString(state.crops)
+          electron.ipcRenderer.send('EXPORT_SRT', { filepath: filepath, content: content })
+        }
+      })
+    }
   }, [])
 
   return (
