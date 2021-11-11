@@ -30,7 +30,7 @@ const Editor: React.FC = () => {
     }
   }, [])
 
-  return (
+  const workspace = (
     <>
       <div className="container">
         <div style={{ width: "10%", height: window.innerHeight, overflowY: "auto" }}>
@@ -49,6 +49,18 @@ const Editor: React.FC = () => {
       </div>
     </>
   )
+
+  const emptyWorkspace = (
+    <div className="container" style={{justifyContent: "center"}}>
+      <div style={{textAlign: "center"}}>
+        <h1>(҂◡_◡)</h1>
+        <h2>It looks like you didn't load the video</h2>
+        <h3>Press <kbd>Ctrl (or Cmd)</kbd> + <kbd>O</kbd> or click on <span className="badge">File &gt; Open video</span></h3>
+      </div>
+    </div>
+  )
+
+  return videoPath === "" ? emptyWorkspace : workspace
 }
 
 export default Editor

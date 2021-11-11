@@ -1,4 +1,5 @@
 import "./App.css";
+import "@fontsource/open-sans";
 import Editor from "./pages/Editor";
 import { StoreProvider } from "./store/StoreContext";
 

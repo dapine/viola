@@ -41,9 +41,9 @@ const SubtitleCard: React.FC<SubtitleCardProps> = props => {
   return (
     <DndProvider backend={HTML5Backend}>
       <div key={subKey} className="card" style={{ margin: "1rem" }}>
-        <div style={{ marginBottom: "0.4rem" }}><span className="badge">{subKey}</span></div>
+        <div style={{ marginBottom: "0.4rem" }}><span className="drop">{subKey}</span></div>
         <div><span>{formatMiliSeconds(crop.start)}</span> ➡️ <span>{crop.end && formatMiliSeconds(crop.end)}</span></div>
-        <div>
+        <div style={{ marginTop: "1em" }}>
           {crop.texts.map((text, i) => {
             return (
               <Draggable id={i} index={i} moveCard={moveCard}>
@@ -55,13 +55,13 @@ const SubtitleCard: React.FC<SubtitleCardProps> = props => {
                       payload: { cropIndex: id, textIndex: i, textValue: e.target.value }
                     })
                   }} />
+                <hr />
               </Draggable>)
           })}
         </div>
         {isTextareaVisible &&
           <div>
             <textarea
-              className="textarea"
               style={{ resize: "none" }}
               onBlur={(e) => {
                 const t: Text = { index: crop.texts.length, value: e.target.value }
@@ -71,7 +71,7 @@ const SubtitleCard: React.FC<SubtitleCardProps> = props => {
                 setTextareaVisible(false)
               }} />
           </div>}
-        <div><button onClick={() => setTextareaVisible(true)}>new</button></div>
+        <div><button onClick={() => setTextareaVisible(true)}>New</button></div>
       </div>
     </DndProvider >
   )
