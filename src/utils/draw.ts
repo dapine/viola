@@ -42,7 +42,7 @@ export const drawCropList = (ctx: any, crops: Array<Crop>, minimumScale: number,
 }
 
 export const drawTimeline = (ctx: any, width: number, height: number, minimumScale: number,
-  minimumScaleTime: number, minimumScalesInLongScale: number, offsetLeft: number, 
+  minimumScaleTime: number, minimumScalesInLongScale: number, offsetLeft: number,
   lineColor: string, longLineColor: string, lineWidth: number, beginX = 0, endX = 20,
   fillStyle = "#999", font = "12px sans-serif") => {
   ctx.clearRect(0, 0, width, height)
@@ -60,4 +60,21 @@ export const drawTimeline = (ctx: any, width: number, height: number, minimumSca
       drawLine(ctx, beginX, i + offsetLeft, 10, i + offsetLeft, lineColor, lineWidth)
     }
   }
+}
+
+export const drawTimelineTooltip = (ctx: any, mouseY: number, time: number, startX = 25,
+  padding = 4, textColor = "#fff", font = "12px sans-serif", bgColor = "#2c2c2c", offsetY = 5) => {
+
+  ctx.fillStyle = textColor
+  ctx.font = font
+
+  const fmtedTime = formatSeconds(time)
+
+  drawSolidRect(ctx,
+    startX,
+    mouseY - offsetY - padding,
+    startX + (12 * fmtedTime.length),
+    mouseY + offsetY + padding,
+    bgColor)
+  ctx.fillText(fmtedTime, startX + padding, mouseY + offsetY)
 }

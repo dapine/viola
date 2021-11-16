@@ -2,7 +2,7 @@ import { MouseEvent, useCallback, useContext, useEffect, useRef, useState, Wheel
 import { ActionType } from "../store/actionTypes"
 import { StoreContext } from "../store/StoreContext"
 import Crop from "../types/crop"
-import { drawCropList, drawLineTimelinePosition, drawTimeline } from "../utils/draw"
+import { drawCropList, drawLineTimelinePosition, drawTimeline, drawTimelineTooltip } from "../utils/draw"
 
 export interface TimelineProps {
   width: number
@@ -19,6 +19,7 @@ export interface TimelineProps {
 const Timeline: React.FC<TimelineProps> = props => {
   const ref = useRef(null)
   const [mouseY, setMouseY] = useState(0.0)
+  const [hoveredTime, setHoveredTime] = useState(0.0)
 
   const { state, dispatch } = useContext(StoreContext)
 
@@ -33,7 +34,7 @@ const Timeline: React.FC<TimelineProps> = props => {
     dispatch({ type: ActionType.SET_TIMELINE_HEIGHT, payload: newHeight })
   }
 
-  const handleClick = () => {
+  const handleClick = (e: MouseEvent<HTMLCanvasElement>) => {
     const time = mouseY / minimumScale * minimumScaleTime
 
     dispatch({ type: ActionType.DESELECT_ALL_CROPS })
@@ -83,11 +84,16 @@ const Timeline: React.FC<TimelineProps> = props => {
 
     setMouseY(y)
 
+    const time = y / minimumScale * minimumScaleTime
+    setHoveredTime(time)
+
     if (e.ctrlKey) {
-      const time = mouseY / minimumScale * minimumScaleTime
       dispatch({ type: ActionType.SET_CURRENT_VIDEO_TIME, payload: time })
     }
   }
+
+  const drawTooltip = useCallback((ctx: any) =>
+    drawTimelineTooltip(ctx, mouseY, hoveredTime), [mouseY, hoveredTime])
 
   const drawPosition = useCallback((ctx: any) => drawLineTimelinePosition(ctx, mouseY), [mouseY])
 
@@ -112,6 +118,7 @@ const Timeline: React.FC<TimelineProps> = props => {
       draw(ctx)
       drawCrops(ctx)
       drawPosition(ctx)
+      drawTooltip(ctx)
       animationFrame = window.requestAnimationFrame(render)
     }
     render()
