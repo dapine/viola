@@ -2,7 +2,7 @@ import { MouseEvent, useCallback, useContext, useEffect, useRef, useState, Wheel
 import { ActionType } from "../store/actionTypes"
 import { StoreContext } from "../store/StoreContext"
 import Crop from "../types/crop"
-import { drawCropList, drawLineTimelinePosition, drawTimeline, drawTimelineTooltip } from "../utils/draw"
+import { drawCropList, drawLineTimelinePosition, drawSolidRect, drawTimeline, drawTimelineTooltip } from "../utils/draw"
 
 export interface TimelineProps {
   width: number
@@ -20,6 +20,7 @@ const Timeline: React.FC<TimelineProps> = props => {
   const ref = useRef(null)
   const [mouseY, setMouseY] = useState(0.0)
   const [hoveredTime, setHoveredTime] = useState(0.0)
+  const [startCropY, setStartCropY] = useState(0.0)
 
   const { state, dispatch } = useContext(StoreContext)
 
@@ -27,11 +28,13 @@ const Timeline: React.FC<TimelineProps> = props => {
     minimumScaleTime, offsetLeft, lineColor, longLineColor, lineWidth } = props
 
   const handleWheel = (e: WheelEvent<HTMLCanvasElement>) => {
-    e.preventDefault()
-    const cur = minimumScale + (e.deltaY * 0.01) * -1
-    const newHeight = height + (e.deltaY * 7) * -1
-    dispatch({ type: ActionType.SET_TIMELINE_MINIMUM_SCALE, payload: cur })
-    dispatch({ type: ActionType.SET_TIMELINE_HEIGHT, payload: newHeight })
+    if (e.shiftKey) {
+      e.preventDefault()
+      const cur = minimumScale + (e.deltaY * 0.01) * -1
+      const newHeight = height + (e.deltaY * 7) * -1
+      dispatch({ type: ActionType.SET_TIMELINE_MINIMUM_SCALE, payload: cur })
+      dispatch({ type: ActionType.SET_TIMELINE_HEIGHT, payload: newHeight })
+    }
   }
 
   const handleClick = (e: MouseEvent<HTMLCanvasElement>) => {
@@ -43,7 +46,7 @@ const Timeline: React.FC<TimelineProps> = props => {
     const hasIncompleteCrop = state.crops.some((crop: Crop) => !('end' in crop))
 
     // XXX: rewrite this in a more functional/immutable way
-    if (hasIncompleteCrop) {
+    if (hasIncompleteCrop && e.shiftKey) {
       const index = state.crops.findIndex((crop: Crop) => !('end' in crop))
       let crop: Crop = state.crops[index]
 
@@ -55,6 +58,7 @@ const Timeline: React.FC<TimelineProps> = props => {
       }
 
       dispatch({ type: ActionType.REPLACE_CROP, payload: { index: index, crop: crop } })
+      setStartCropY(0.0)
     } else {
       const selected = state.crops.find((crop: Crop) => {
         return crop.start <= time && crop.end! >= time
@@ -64,13 +68,15 @@ const Timeline: React.FC<TimelineProps> = props => {
         const index = state.crops.findIndex((crop: Crop) => crop === selected)
 
         dispatch({ type: ActionType.SELECT_CROP, payload: index })
-      } else {
+      } else if (e.shiftKey) {
         let crop: Crop = { start: time, texts: [], selected: false }
         dispatch({ type: ActionType.ADD_CROP, payload: { crop: crop } })
         const sorted = state.crops.sort((a: Crop, b: Crop) => {
           return a.start - b.start
         })
         dispatch({ type: ActionType.REPLACE_ALL_CROPS, payload: { crops: sorted } })
+
+        setStartCropY(mouseY)
       }
     }
 
@@ -86,16 +92,16 @@ const Timeline: React.FC<TimelineProps> = props => {
 
     const time = y / minimumScale * minimumScaleTime
     setHoveredTime(time)
-
-    if (e.ctrlKey) {
-      dispatch({ type: ActionType.SET_CURRENT_VIDEO_TIME, payload: time })
-    }
   }
 
   const drawTooltip = useCallback((ctx: any) =>
     drawTimelineTooltip(ctx, mouseY, hoveredTime), [mouseY, hoveredTime])
 
   const drawPosition = useCallback((ctx: any) => drawLineTimelinePosition(ctx, mouseY), [mouseY])
+
+  // TODO: Create a config for default values, colors, etc
+  const drawIncompleteCrop = useCallback((ctx: any) => 
+    (startCropY !== 0.0) && drawSolidRect(ctx, 0, startCropY, 15, mouseY, "#545C52"), [startCropY, mouseY])
 
   const drawCrops = useCallback((ctx: any) =>
     drawCropList(ctx, state.crops, minimumScale, minimumScaleTime),
@@ -117,6 +123,7 @@ const Timeline: React.FC<TimelineProps> = props => {
     const render = () => {
       draw(ctx)
       drawCrops(ctx)
+      drawIncompleteCrop(ctx)
       drawPosition(ctx)
       drawTooltip(ctx)
       animationFrame = window.requestAnimationFrame(render)
@@ -127,7 +134,7 @@ const Timeline: React.FC<TimelineProps> = props => {
       window.cancelAnimationFrame(animationFrame)
     }
 
-  }, [mouseY, drawCrops, draw, drawPosition])
+  }, [mouseY, drawCrops, draw, drawPosition, drawTooltip, drawIncompleteCrop])
 
   return <canvas ref={ref} {...props}
     onMouseMove={handleMouseMove}
