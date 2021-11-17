@@ -38,9 +38,11 @@ const SubtitleCard: React.FC<SubtitleCardProps> = props => {
     [crop.texts, dispatch, id],
   )
 
+  const border = crop.selected ? "3px solid #B85C57" : "none"
+
   return (
     <DndProvider backend={HTML5Backend}>
-      <div key={subKey} className="card" style={{ margin: "1rem" }}>
+      <div key={subKey} className="card" style={{ margin: "1rem", border: border }}>
         <div style={{ marginBottom: "0.4rem" }}><span className="drop">{subKey}</span></div>
         <div><span>{formatMiliSeconds(crop.start)}</span> ➡️ <span>{crop.end && formatMiliSeconds(crop.end)}</span></div>
         <div style={{ marginTop: "1em" }}>
