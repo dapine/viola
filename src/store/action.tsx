@@ -1,3 +1,8 @@
+export interface Action {
+  type: ActionType,
+  payload: any
+}
+
 export enum ActionType {
   SET_CURRENT_VIDEO_TIME,
   SET_VIDEO_DURATION,

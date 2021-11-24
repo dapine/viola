@@ -1,5 +1,5 @@
 import { SyntheticEvent, useContext, useEffect, useRef } from "react"
-import { ActionType } from "../store/actionTypes"
+import { ActionType } from "../store/action"
 import { StoreContext } from "../store/StoreContext"
 interface VideoProps {
   src: string

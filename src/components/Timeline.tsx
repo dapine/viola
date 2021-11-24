@@ -1,5 +1,5 @@
 import { MouseEvent, useCallback, useContext, useEffect, useRef, useState, WheelEvent } from "react"
-import { ActionType } from "../store/actionTypes"
+import { ActionType } from "../store/action"
 import { StoreContext } from "../store/StoreContext"
 import Crop from "../types/crop"
 import { drawCropList, drawLineTimelinePosition, drawSolidRect, drawTimeline, drawTimelineTooltip } from "../utils/draw"
@@ -40,7 +40,7 @@ const Timeline: React.FC<TimelineProps> = props => {
   const handleClick = (e: MouseEvent<HTMLCanvasElement>) => {
     const time = mouseY / minimumScale * minimumScaleTime
 
-    dispatch({ type: ActionType.DESELECT_ALL_CROPS })
+    dispatch({ type: ActionType.DESELECT_ALL_CROPS, payload: null })
 
     // "Incomplete crop" means a crop with start time only
     const hasIncompleteCrop = state.crops.some((crop: Crop) => !('end' in crop))
