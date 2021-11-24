@@ -48,7 +48,7 @@ const SubtitleCard: React.FC<SubtitleCardProps> = props => {
         <div style={{ marginTop: "1em" }}>
           {crop.texts.map((text, i) => {
             return (
-              <Draggable id={i} index={i} moveCard={moveCard}>
+              <Draggable key={i} id={i} index={i} moveCard={moveCard}>
                 <Editable
                   value={text.value}
                   onChange={(e) => {

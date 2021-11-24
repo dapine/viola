@@ -39,7 +39,7 @@ const Editor: React.FC = () => {
         <div style={{ width: "40%", padding: "1rem", height: window.innerHeight, overflowY: "auto" }}>
           {
             state.crops.map((crop: Crop, i: number) =>
-              <SubtitleCard id={i} subKey={(i + 1).toString()} crop={crop} />
+              <SubtitleCard key={i} id={i} subKey={(i + 1).toString()} crop={crop} />
             )
           }
         </div>

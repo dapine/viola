@@ -136,7 +136,9 @@ const Timeline: React.FC<TimelineProps> = props => {
 
   }, [mouseY, drawCrops, draw, drawPosition, drawTooltip, drawIncompleteCrop])
 
-  return <canvas ref={ref} {...props}
+  return <canvas ref={ref}
+    width={width}
+    height={height}
     onMouseMove={handleMouseMove}
     onWheel={handleWheel}
     onClick={handleClick}
