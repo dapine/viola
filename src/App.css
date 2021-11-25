@@ -29,15 +29,21 @@ textarea {
     padding-top: 0.1rem;
     padding-bottom: 0.1rem;
     border-radius: 9rem;
-    color: #fff;
-    background-color: #256EFF;
 }
 
 .badge {
     padding: 0.1em 0.2em;
     border-radius: 0.3em;
+}
+
+.primary {
     color: #fff;
     background-color: #256EFF;
+}
+
+.warning {
+    color: #fff;
+    background-color: #FF521B;
 }
 
 hr {

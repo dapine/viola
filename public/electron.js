@@ -33,7 +33,7 @@ function createWindow() {
       submenu: [
         {
           label: 'Open video',
-          accelerator: 'CmdOrCtrl+O',
+          accelerator: 'CmdOrCtrl+Shift+O',
           click() {
             dialog.showOpenDialog({
               properties: ['openFile'],
@@ -51,6 +51,50 @@ function createWindow() {
               })
           }
         },
+        { type: 'separator' },
+        {
+          label: 'Open project',
+          accelerator: 'CmdOrCtrl+O',
+          click() {
+            dialog.showOpenDialog({
+              properties: ['openFile'],
+              filters: [
+                { name: 'JSON', extensions: ['json'] },
+              ]
+            })
+              .then(function (fileObj) {
+                if (!fileObj.canceled) {
+                  fs.readFile(fileObj.filePaths[0], 'utf8', (err, json) => {
+                    if (!err)
+                      win.webContents.send('OPEN_PROJECT', JSON.parse(json))
+                  })
+                }
+              })
+              .catch(function (err) {
+                console.error(err)
+              })
+          }
+        },
+        {
+          label: 'Save project',
+          accelerator: 'CmdOrCtrl+S',
+          click() {
+            dialog.showSaveDialog({
+              filters: [
+                { name: 'JSON', extensions: ['json'] }
+              ]
+            })
+              .then(function (fileObj) {
+                if (!fileObj.canceled) {
+                  win.webContents.send('SAVE', fileObj.filePath)
+                }
+              })
+              .catch(function (err) {
+                console.error(err)
+              })
+          }
+        },
+        { type: 'separator' },
         {
           label: 'Export...',
           submenu: [
@@ -107,6 +151,15 @@ app.on('activate', () => {
 })
 
 ipcMain.on('EXPORT_SRT', function (e, data) {
+  if (data.content !== '') {
+    fs.writeFile(data.filepath, data.content, function (err) {
+      if (err)
+        console.log(err)
+    })
+  }
+})
+
+ipcMain.on('SAVE', function (e, data) {
   if (data.content !== '') {
     fs.writeFile(data.filepath, data.content, function (err) {
       if (err)

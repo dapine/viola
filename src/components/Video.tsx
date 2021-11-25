@@ -6,10 +6,11 @@ interface VideoProps {
   width: string
   height: string
   controls?: boolean
+  onError(): any
 }
 
 const Video: React.FC<VideoProps> = props => {
-  const { src, width, height, controls = false } = props
+  const { src, width, height, onError, controls = false } = props
 
   const { state, dispatch } = useContext(StoreContext)
 
@@ -33,7 +34,9 @@ const Video: React.FC<VideoProps> = props => {
         dispatch({ type: ActionType.SET_VIDEO_DURATION, payload: e.currentTarget.duration })
         const newHeight = (state.timelineConfig.height * state.timelineConfig.minimumScale) / state.timelineConfig.minimumScaleTime
         dispatch({ type: ActionType.SET_TIMELINE_HEIGHT, payload: newHeight })
-      }} />
+      }}
+      onError={onError}
+    />
   )
 }
 
