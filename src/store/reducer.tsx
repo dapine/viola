@@ -1,5 +1,6 @@
 import { TimelineProps } from "../components/Timeline"
 import Crop from "../types/crop"
+import Text from "../types/text"
 import { Action, ActionType } from "./action"
 
 export interface StateType {
@@ -66,6 +67,11 @@ export const reducer = (state: any, action: Action) => {
       return { ...state }
     case ActionType.REPLACE_TEXT_FROM_CROP:
       state.crops[action.payload.cropIndex].texts[action.payload.textIndex].value = action.payload.textValue
+      return { ...state }
+
+    case ActionType.REMOVE_TEXT_FROM_CROP:
+      const ts = state.crops[action.payload.cropIndex].texts.filter((text: Text) => text !== action.payload.text)
+      state.crops[action.payload.cropIndex].texts = ts
       return { ...state }
     default:
       return state

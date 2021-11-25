@@ -26,7 +26,7 @@ const SubtitleCard: React.FC<SubtitleCardProps> = props => {
   const moveCard = useCallback(
     (dragIndex: number, hoverIndex: number) => {
       const dragCard = crop.texts[dragIndex]
-      const newOrder: any = update(crop.texts, {
+      const newOrder: Array<Text> = update(crop.texts, {
         $splice: [
           [dragIndex, 1],
           [hoverIndex, 0, dragCard],
@@ -55,6 +55,12 @@ const SubtitleCard: React.FC<SubtitleCardProps> = props => {
                     dispatch({
                       type: ActionType.REPLACE_TEXT_FROM_CROP,
                       payload: { cropIndex: id, textIndex: i, textValue: e.target.value }
+                    })
+                  }}
+                  remove={() => {
+                    dispatch({
+                      type: ActionType.REMOVE_TEXT_FROM_CROP,
+                      payload: { cropIndex: id, text: text }
                     })
                   }} />
                 <hr />
