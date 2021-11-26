@@ -56,6 +56,9 @@ export const reducer = (state: any, action: Action) => {
       })
 
       return state
+    case ActionType.REMOVE_CROP:
+      const newCrops = state.crops.filter((crop: Crop) => crop !== action.payload.crop)
+      return { ...state, crops: newCrops }
     case ActionType.REPLACE_ALL_CROPS:
       return { ...state, crops: action.payload.crops }
     case ActionType.SET_TIMELINE_HEIGHT:

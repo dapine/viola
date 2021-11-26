@@ -12,6 +12,7 @@ import { DndProvider } from "react-dnd"
 import { HTML5Backend } from "react-dnd-html5-backend"
 import ConfirmDialog from "./ConfirmDialog"
 import { confirmDialog } from "../types/modalStyle"
+import IconButton from "./IconButton"
 interface SubtitleCardProps {
   id: number
   subKey: string
@@ -22,7 +23,8 @@ const SubtitleCard: React.FC<SubtitleCardProps> = props => {
   const { subKey, crop, id } = props
 
   const [isTextareaVisible, setTextareaVisible] = useState(false)
-  const [isModalOpen, setModalOpen] = useState(false)
+  const [isModalRemoveTextOpen, setModalRemoveTextOpen] = useState(false)
+  const [isModalRemoveCropOpen, setModalRemoveCropOpen] = useState(false)
   const [textToDelete, setTextToDelete] = useState({} as Text)
 
   const { dispatch } = useContext(StoreContext)
@@ -43,17 +45,27 @@ const SubtitleCard: React.FC<SubtitleCardProps> = props => {
   )
 
   const border = crop.selected ? "3px solid #B85C57" : "none"
+  const cropStartMili = formatMiliSeconds(crop.start)
+  const cropEndMili = crop.end && formatMiliSeconds(crop.end)
 
   const closeModal = () => {
     setTextToDelete({} as Text)
-    setModalOpen(false)
+    setModalRemoveTextOpen(false)
+    setModalRemoveCropOpen(false)
   }
 
   return (
     <DndProvider backend={HTML5Backend}>
       <div key={subKey} className="card" style={{ margin: "1rem", border: border }}>
-        <div style={{ marginBottom: "0.4rem" }}><span className="drop primary">{subKey}</span></div>
-        <div><span>{formatMiliSeconds(crop.start)}</span> ➡️ <span>{crop.end && formatMiliSeconds(crop.end)}</span></div>
+        <div style={{ marginBottom: "2em" }}>
+          <span className="drop primary" style={{ float: "left" }}>{subKey}</span>
+          <IconButton
+            style={{ float: "right" }}
+            onClick={() => setModalRemoveCropOpen(true)}
+            icon='❌'
+          />
+        </div>
+        <div><span>{cropStartMili}</span> ➡️ <span>{cropEndMili}</span></div>
         <div style={{ marginTop: "1em" }}>
           {crop.texts.map((text, i) => {
             return (
@@ -67,7 +79,7 @@ const SubtitleCard: React.FC<SubtitleCardProps> = props => {
                     })
                   }}
                   remove={() => {
-                    setModalOpen(true)
+                    setModalRemoveTextOpen(true)
                     setTextToDelete(text)
                   }} />
                 <hr />
@@ -88,7 +100,7 @@ const SubtitleCard: React.FC<SubtitleCardProps> = props => {
           </div>}
         <div><button onClick={() => setTextareaVisible(true)}>New</button></div>
         <ConfirmDialog
-          isOpen={isModalOpen}
+          isOpen={isModalRemoveTextOpen}
           style={confirmDialog}
           confirmAction={() => {
             dispatch({
@@ -98,11 +110,25 @@ const SubtitleCard: React.FC<SubtitleCardProps> = props => {
 
             closeModal()
           }}
-          notConfirmAction={() => closeModal()}
+          notConfirmAction={closeModal}
         >
           <h1>Are you sure?</h1>
           <p><b>This will delete the following caption:</b></p>
           <code>{textToDelete.value}</code>
+          <hr />
+        </ConfirmDialog>
+        <ConfirmDialog
+          isOpen={isModalRemoveCropOpen}
+          style={confirmDialog}
+          confirmAction={() => {
+            dispatch({ type: ActionType.REMOVE_CROP, payload: { crop: crop } })
+
+            closeModal()
+          }}
+          notConfirmAction={closeModal}
+        >
+          <h1>Are you sure?</h1>
+          <p><b>This will delete this caption section</b></p>
           <hr />
         </ConfirmDialog>
       </div>
