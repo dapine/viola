@@ -100,7 +100,7 @@ const Timeline: React.FC<TimelineProps> = props => {
   const drawPosition = useCallback((ctx: any) => drawLineTimelinePosition(ctx, mouseY), [mouseY])
 
   // TODO: Create a config for default values, colors, etc
-  const drawIncompleteCrop = useCallback((ctx: any) => 
+  const drawIncompleteCrop = useCallback((ctx: any) =>
     (startCropY !== 0.0) && drawSolidRect(ctx, 0, startCropY, 15, mouseY, "#545C52"), [startCropY, mouseY])
 
   const drawCrops = useCallback((ctx: any) =>

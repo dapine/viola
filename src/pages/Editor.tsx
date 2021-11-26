@@ -1,5 +1,6 @@
 import { useContext, useEffect, useState } from "react"
 import { toast } from "react-toastify"
+import 'react-toastify/dist/ReactToastify.css'
 import SubtitleCard from "../components/SubtitleCard"
 import Timeline from "../components/Timeline"
 import Video from "../components/Video"
@@ -8,7 +9,6 @@ import { ActionType } from "../store/action"
 import { StoreContext } from "../store/StoreContext"
 import Crop from "../types/crop"
 import isElectron from "../utils/isElectron"
-import 'react-toastify/dist/ReactToastify.css'
 
 const electron = isElectron() ? window.require("electron") : undefined
 // auto load video when in browser/dev
@@ -45,7 +45,7 @@ const Editor: React.FC = () => {
         }
       })
     }
-  }, [state.crops, videoPath])
+  }, [state.crops, videoPath, dispatch])
 
   const workspace = (
     <>

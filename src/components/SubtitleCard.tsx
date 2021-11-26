@@ -10,6 +10,8 @@ import update from 'immutability-helper'
 import Editable from "./Editable"
 import { DndProvider } from "react-dnd"
 import { HTML5Backend } from "react-dnd-html5-backend"
+import ConfirmDialog from "./ConfirmDialog"
+import { confirmDialog } from "../types/modalStyle"
 interface SubtitleCardProps {
   id: number
   subKey: string
@@ -20,6 +22,8 @@ const SubtitleCard: React.FC<SubtitleCardProps> = props => {
   const { subKey, crop, id } = props
 
   const [isTextareaVisible, setTextareaVisible] = useState(false)
+  const [isModalOpen, setModalOpen] = useState(false)
+  const [textToDelete, setTextToDelete] = useState({} as Text)
 
   const { dispatch } = useContext(StoreContext)
 
@@ -40,6 +44,11 @@ const SubtitleCard: React.FC<SubtitleCardProps> = props => {
 
   const border = crop.selected ? "3px solid #B85C57" : "none"
 
+  const closeModal = () => {
+    setTextToDelete({} as Text)
+    setModalOpen(false)
+  }
+
   return (
     <DndProvider backend={HTML5Backend}>
       <div key={subKey} className="card" style={{ margin: "1rem", border: border }}>
@@ -58,10 +67,8 @@ const SubtitleCard: React.FC<SubtitleCardProps> = props => {
                     })
                   }}
                   remove={() => {
-                    dispatch({
-                      type: ActionType.REMOVE_TEXT_FROM_CROP,
-                      payload: { cropIndex: id, text: text }
-                    })
+                    setModalOpen(true)
+                    setTextToDelete(text)
                   }} />
                 <hr />
               </Draggable>)
@@ -80,6 +87,24 @@ const SubtitleCard: React.FC<SubtitleCardProps> = props => {
               }} />
           </div>}
         <div><button onClick={() => setTextareaVisible(true)}>New</button></div>
+        <ConfirmDialog
+          isOpen={isModalOpen}
+          style={confirmDialog}
+          confirmAction={() => {
+            dispatch({
+              type: ActionType.REMOVE_TEXT_FROM_CROP,
+              payload: { cropIndex: id, text: textToDelete }
+            })
+
+            closeModal()
+          }}
+          notConfirmAction={() => closeModal()}
+        >
+          <h1>Are you sure?</h1>
+          <p><b>This will delete the following caption:</b></p>
+          <code>{textToDelete.value}</code>
+          <hr />
+        </ConfirmDialog>
       </div>
     </DndProvider >
   )
