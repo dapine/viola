@@ -13,6 +13,7 @@ import { HTML5Backend } from "react-dnd-html5-backend"
 import ConfirmDialog from "./ConfirmDialog"
 import { confirmDialog } from "../types/modalStyle"
 import IconButton from "./IconButton"
+import Drop from "./Drop"
 interface SubtitleCardProps {
   id: number
   subKey: string
@@ -58,7 +59,8 @@ const SubtitleCard: React.FC<SubtitleCardProps> = props => {
     <DndProvider backend={HTML5Backend}>
       <div key={subKey} className="card" style={{ margin: "1rem", border: border }}>
         <div style={{ marginBottom: "2em" }}>
-          <span className="drop primary" style={{ float: "left" }}>{subKey}</span>
+          {/* <span className="drop primary" style={{ float: "left" }}>{subKey}</span> */}
+          <Drop>{subKey}</Drop>
           <IconButton
             style={{ float: "right" }}
             onClick={() => setModalRemoveCropOpen(true)}
