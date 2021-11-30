@@ -1,19 +1,20 @@
+import update from 'immutability-helper'
 import { useCallback, useContext, useState } from "react"
+import { DndProvider } from "react-dnd"
+import { HTML5Backend } from "react-dnd-html5-backend"
+import { useTheme } from "styled-components"
 import { ActionType } from "../store/action"
 import { StoreContext } from "../store/StoreContext"
 import Crop from "../types/crop"
+import { confirmDialog } from "../types/modalStyle"
 import Text from "../types/text"
 import { formatMiliSeconds } from "../utils/utils"
-import Draggable from "./Draggable"
-import "./styles/SubtitleCard.css"
-import update from 'immutability-helper'
-import Editable from "./Editable"
-import { DndProvider } from "react-dnd"
-import { HTML5Backend } from "react-dnd-html5-backend"
 import ConfirmDialog from "./ConfirmDialog"
-import { confirmDialog } from "../types/modalStyle"
-import IconButton from "./IconButton"
+import Draggable from "./Draggable"
 import Drop from "./Drop"
+import Editable from "./Editable"
+import IconButton from "./IconButton"
+import "./styles/SubtitleCard.css"
 interface SubtitleCardProps {
   id: number
   subKey: string
@@ -29,6 +30,8 @@ const SubtitleCard: React.FC<SubtitleCardProps> = props => {
   const [textToDelete, setTextToDelete] = useState({} as Text)
 
   const { dispatch } = useContext(StoreContext)
+
+  const theme = useTheme();
 
   const moveCard = useCallback(
     (dragIndex: number, hoverIndex: number) => {
@@ -59,11 +62,12 @@ const SubtitleCard: React.FC<SubtitleCardProps> = props => {
     <DndProvider backend={HTML5Backend}>
       <div key={subKey} className="card" style={{ margin: "1rem", border: border }}>
         <div style={{ marginBottom: "2em" }}>
-          <Drop>{subKey}</Drop>
+          <Drop color={theme.colors.primary}>{subKey}</Drop>
           <IconButton
             style={{ float: "right" }}
             onClick={() => setModalRemoveCropOpen(true)}
             icon='❌'
+            color={theme.colors.negative}
           />
         </div>
         <div><span>{cropStartMili}</span> ➡️ <span>{cropEndMili}</span></div>

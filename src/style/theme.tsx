@@ -6,9 +6,16 @@ export interface Theme {
 }
 
 interface Colors {
+  white: string
+  black: string
+  gray: string
   foreground: string
+  background: string
   primary: string
   secondary: string
+  positive: string
+  negative: string
+  attention: string
 }
 
 interface Button {
