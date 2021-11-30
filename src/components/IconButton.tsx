@@ -1,17 +1,18 @@
 import { MouseEvent } from "react"
-import { StyledButtonBase } from "./styled/button"
+import { Button, StyledButtonBase } from "./styled/button"
 
 interface IconButtonProps {
   onClick: (event: MouseEvent<HTMLButtonElement>) => void
   icon: any
-  style: object
+  style?: object
   color?: string
+  link?: boolean
 }
 
 const IconButton: React.FC<IconButtonProps> = (props) => {
-  const { onClick, icon, style, color } = props
+  const { onClick, icon, style, color, link } = props
 
-  return <StyledButtonBase onClick={onClick} style={style} color={color}>{icon}</StyledButtonBase>
+  return <Button onClick={onClick} style={style} color={color} link={link}>{icon}</Button>
 }
 
 export default IconButton

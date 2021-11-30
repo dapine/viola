@@ -14,7 +14,11 @@ import Draggable from "./Draggable"
 import Drop from "./Drop"
 import Editable from "./Editable"
 import IconButton from "./IconButton"
-import "./styles/SubtitleCard.css"
+import { Button } from './styled/button'
+import { StyledCardBase } from './styled/card'
+import { Separator } from './styled/separator'
+import { TextArea } from './styled/textarea'
+
 interface SubtitleCardProps {
   id: number
   subKey: string
@@ -48,7 +52,7 @@ const SubtitleCard: React.FC<SubtitleCardProps> = props => {
     [crop.texts, dispatch, id],
   )
 
-  const border = crop.selected ? "3px solid #B85C57" : "none"
+  const border = crop.selected ? `3px solid ${theme.colors.secondary}` : "none"
   const cropStartMili = formatMiliSeconds(crop.start)
   const cropEndMili = crop.end && formatMiliSeconds(crop.end)
 
@@ -60,7 +64,7 @@ const SubtitleCard: React.FC<SubtitleCardProps> = props => {
 
   return (
     <DndProvider backend={HTML5Backend}>
-      <div key={subKey} className="card" style={{ margin: "1rem", border: border }}>
+      <StyledCardBase key={subKey} style={{ margin: "1rem", border: border }}>
         <div style={{ marginBottom: "2em" }}>
           <Drop color={theme.colors.primary}>{subKey}</Drop>
           <IconButton
@@ -87,14 +91,13 @@ const SubtitleCard: React.FC<SubtitleCardProps> = props => {
                     setModalRemoveTextOpen(true)
                     setTextToDelete(text)
                   }} />
-                <hr />
+                  <Separator />
               </Draggable>)
           })}
         </div>
         {isTextareaVisible &&
           <div>
-            <textarea
-              style={{ resize: "none" }}
+            <TextArea
               onBlur={(e) => {
                 const t: Text = { index: crop.texts.length, value: e.target.value }
                 crop.texts = [...crop.texts, t]
@@ -103,7 +106,7 @@ const SubtitleCard: React.FC<SubtitleCardProps> = props => {
                 setTextareaVisible(false)
               }} />
           </div>}
-        <div><button onClick={() => setTextareaVisible(true)}>New</button></div>
+        <div style={{marginTop: "1em"}}><Button onClick={() => setTextareaVisible(true)}>New</Button></div>
         <ConfirmDialog
           isOpen={isModalRemoveTextOpen}
           style={confirmDialog}
@@ -136,7 +139,7 @@ const SubtitleCard: React.FC<SubtitleCardProps> = props => {
           <p><b>This will delete this caption section</b></p>
           <hr />
         </ConfirmDialog>
-      </div>
+      </StyledCardBase>
     </DndProvider >
   )
 }
