@@ -59,7 +59,6 @@ const SubtitleCard: React.FC<SubtitleCardProps> = props => {
     <DndProvider backend={HTML5Backend}>
       <div key={subKey} className="card" style={{ margin: "1rem", border: border }}>
         <div style={{ marginBottom: "2em" }}>
-          {/* <span className="drop primary" style={{ float: "left" }}>{subKey}</span> */}
           <Drop>{subKey}</Drop>
           <IconButton
             style={{ float: "right" }}

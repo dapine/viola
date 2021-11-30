@@ -4,13 +4,18 @@ import Editor from "./pages/Editor";
 import { StoreProvider } from "./store/StoreContext";
 import { ToastContainer } from "react-toastify";
 import { ThemeProvider } from "styled-components"
+import { Theme } from "./style/theme";
+import { Shape } from "./style/shape";
 
 function App() {
-  const theme = {
+  const theme: Theme = {
     colors: {
       foreground: "#fff",
       primary: "#256EFF",
       secondary: "#FF521B",
+    },
+    button: {
+      shape: Shape.Rounded
     }
   }
 
