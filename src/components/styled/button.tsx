@@ -1,10 +1,6 @@
 import React from "react";
 import styled from "styled-components";
 
-interface StyledButtonBaseProps {
-  link: boolean
-}
-
 export const StyledButtonBase = styled.button`
   background-color: ${props => props.color ? props.color : props.theme.colors.primary};
   color: ${props => props.theme.colors.white};

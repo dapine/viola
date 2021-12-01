@@ -1,5 +1,5 @@
 import { MouseEvent } from "react"
-import { Button, StyledButtonBase } from "./styled/button"
+import { Button } from "./styled/button"
 
 interface IconButtonProps {
   onClick: (event: MouseEvent<HTMLButtonElement>) => void
