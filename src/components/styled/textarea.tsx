@@ -5,6 +5,8 @@ const StyledTextAreaBase = styled.textarea`
   box-sizing: border-box;
   width: 100%;
   height: 80px;
+  background-color: ${props => props.theme.colors.background};
+  color: ${props => props.theme.colors.foreground};
 `
 
 interface TextAreaProps extends React.HTMLAttributes<HTMLTextAreaElement> {
