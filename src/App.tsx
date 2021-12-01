@@ -5,10 +5,11 @@ import "./App.css";
 import Editor from "./pages/Editor";
 import { StoreProvider } from "./store/StoreContext";
 import { Shape } from "./style/shape";
-import { Theme } from "./style/theme";
+import { ColorSchemeMode, Theme } from "./style/theme";
 
 function App() {
   const theme: Theme = {
+    mode: ColorSchemeMode.Light,
     colors: {
       white: "#fff",
       black: "#000",
@@ -29,7 +30,10 @@ function App() {
   const GlobalStyle = createGlobalStyle`
     body {
       background-color: ${props => props.theme.colors.background};
-      color: ${props => props.theme.colors.foreground}
+      color: ${props => props.theme.colors.foreground};
+    }
+    :root {
+      color-scheme: ${props => props.theme.mode};
     }
   `
 

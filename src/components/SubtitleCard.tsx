@@ -6,7 +6,6 @@ import { useTheme } from "styled-components"
 import { ActionType } from "../store/action"
 import { StoreContext } from "../store/StoreContext"
 import Crop from "../types/crop"
-import { confirmDialog } from "../types/modalStyle"
 import Text from "../types/text"
 import { formatMiliSeconds } from "../utils/utils"
 import ConfirmDialog from "./ConfirmDialog"
@@ -109,7 +108,6 @@ const SubtitleCard: React.FC<SubtitleCardProps> = props => {
         <div style={{marginTop: "1em"}}><Button onClick={() => setTextareaVisible(true)}>New</Button></div>
         <ConfirmDialog
           isOpen={isModalRemoveTextOpen}
-          style={confirmDialog}
           confirmAction={() => {
             dispatch({
               type: ActionType.REMOVE_TEXT_FROM_CROP,
@@ -127,7 +125,6 @@ const SubtitleCard: React.FC<SubtitleCardProps> = props => {
         </ConfirmDialog>
         <ConfirmDialog
           isOpen={isModalRemoveCropOpen}
-          style={confirmDialog}
           confirmAction={() => {
             dispatch({ type: ActionType.REMOVE_CROP, payload: { crop: crop } })
 

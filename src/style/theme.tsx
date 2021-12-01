@@ -1,6 +1,7 @@
 import { Shape } from "./shape";
 
 export interface Theme {
+  mode: ColorSchemeMode
   colors: Colors
   button: Button
 }
@@ -20,4 +21,9 @@ interface Colors {
 
 interface Button {
   shape: Shape
+}
+
+export enum ColorSchemeMode {
+  Light = "light",
+  Dark = "dark"
 }
