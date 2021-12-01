@@ -1,6 +1,6 @@
 import "@fontsource/open-sans";
 import { ToastContainer } from "react-toastify";
-import { ThemeProvider } from "styled-components";
+import { createGlobalStyle, ThemeProvider } from "styled-components";
 import "./App.css";
 import Editor from "./pages/Editor";
 import { StoreProvider } from "./store/StoreContext";
@@ -26,12 +26,20 @@ function App() {
     }
   }
 
+  const GlobalStyle = createGlobalStyle`
+    body {
+      background-color: ${props => props.theme.colors.background};
+      color: ${props => props.theme.colors.foreground}
+    }
+  `
+
   return (
     <StoreProvider>
       <ThemeProvider theme={theme}>
         <Editor />
 
         <ToastContainer />
+        <GlobalStyle />
       </ThemeProvider>
     </StoreProvider>
   )
