@@ -10,13 +10,6 @@ button, a {
     font-family: "Open Sans";
 }
 
-kbd {
-    border-radius: 0.2em;
-    padding: 1px 2px 0;
-    border: 1px solid black;
-    background-color: #fff;
-}
-
 textarea {
     font-family: "Open Sans";
     padding: 0.3rem;

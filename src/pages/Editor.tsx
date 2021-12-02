@@ -4,6 +4,7 @@ import 'react-toastify/dist/ReactToastify.css'
 import { useTheme } from "styled-components"
 import { Badge } from "../components/styled/badge"
 import { Flex } from "../components/styled/flex"
+import { Kbd } from "../components/styled/kbd"
 import SubtitleCard from "../components/SubtitleCard"
 import Timeline from "../components/Timeline"
 import Video from "../components/Video"
@@ -83,9 +84,9 @@ const Editor: React.FC = () => {
       <div style={{ textAlign: "center" }}>
         <h1>(҂◡_◡)</h1>
         <h2>It looks like you didn't load the video/project</h2>
-        <h3>Press <kbd>Ctrl (or Cmd)</kbd> + <kbd>Shift</kbd> + <kbd>O</kbd> or click on <Badge>File &gt; Open video</Badge></h3>
+        <h3>Press <Kbd>Ctrl (or Cmd)</Kbd> + <Kbd>Shift</Kbd> + <Kbd>O</Kbd> or click on <Badge>File &gt; Open video</Badge></h3>
         <h3>or</h3>
-        <h3><kbd>Ctrl (or Cmd)</kbd> + <kbd>O</kbd> or click on <Badge color={theme.colors.attention}>File &gt; Open project</Badge></h3>
+        <h3><Kbd>Ctrl (or Cmd)</Kbd> + <Kbd>O</Kbd> or click on <Badge color={theme.colors.attention}>File &gt; Open project</Badge></h3>
       </div>
     </Flex>
   )
