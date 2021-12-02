@@ -34,6 +34,7 @@ const Editable: React.FC<EditableProps> = (props) => {
 
   const editUI = (
     <TextArea
+      autoFocus
       value={value}
       onBlur={(e) => { setEditing(false); onBlur(e) }}
       onChange={(e: ChangeEvent<HTMLTextAreaElement>) => { onChange(e) }} />

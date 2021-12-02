@@ -90,13 +90,14 @@ const SubtitleCard: React.FC<SubtitleCardProps> = props => {
                     setModalRemoveTextOpen(true)
                     setTextToDelete(text)
                   }} />
-                  <Separator />
+                <Separator />
               </Draggable>)
           })}
         </div>
         {isTextareaVisible &&
           <div>
             <TextArea
+              autoFocus
               onBlur={(e) => {
                 const t: Text = { index: crop.texts.length, value: e.target.value }
                 crop.texts = [...crop.texts, t]
@@ -105,7 +106,9 @@ const SubtitleCard: React.FC<SubtitleCardProps> = props => {
                 setTextareaVisible(false)
               }} />
           </div>}
-        <div style={{marginTop: "1em"}}><Button onClick={() => setTextareaVisible(true)}>New</Button></div>
+        <div style={{ marginTop: "1em" }}>
+          <Button onClick={() => setTextareaVisible(true)}>New</Button>
+        </div>
         <ConfirmDialog
           isOpen={isModalRemoveTextOpen}
           confirmAction={() => {
@@ -113,7 +116,6 @@ const SubtitleCard: React.FC<SubtitleCardProps> = props => {
               type: ActionType.REMOVE_TEXT_FROM_CROP,
               payload: { cropIndex: id, text: textToDelete }
             })
-
             closeModal()
           }}
           notConfirmAction={closeModal}
@@ -121,7 +123,7 @@ const SubtitleCard: React.FC<SubtitleCardProps> = props => {
           <h1>Are you sure?</h1>
           <p><b>This will delete the following caption:</b></p>
           <code>{textToDelete.value}</code>
-          <hr />
+          <Separator />
         </ConfirmDialog>
         <ConfirmDialog
           isOpen={isModalRemoveCropOpen}
@@ -134,7 +136,7 @@ const SubtitleCard: React.FC<SubtitleCardProps> = props => {
         >
           <h1>Are you sure?</h1>
           <p><b>This will delete this caption section</b></p>
-          <hr />
+          <Separator />
         </ConfirmDialog>
       </StyledCardBase>
     </DndProvider >

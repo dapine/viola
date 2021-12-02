@@ -11,6 +11,7 @@ const StyledTextAreaBase = styled.textarea`
 
 interface TextAreaProps extends React.HTMLAttributes<HTMLTextAreaElement> {
   value?: any
+  autoFocus?: boolean
 }
 
 export const TextArea: React.FC<TextAreaProps> = (props) => {
