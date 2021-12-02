@@ -49,8 +49,10 @@ const Editor: React.FC = () => {
           electron.ipcRenderer.send('SAVE', { filepath: filepath, content: json })
         }
       })
+
+      electron.ipcRenderer.send('THEME', { mode: theme.mode })
     }
-  }, [state.crops, videoPath, dispatch])
+  }, [state.crops, videoPath, dispatch, theme.mode])
 
   const workspace = (
     <>
