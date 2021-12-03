@@ -1,4 +1,7 @@
-import { ChangeEvent, FocusEvent, useState } from "react"
+import React, { ChangeEvent, FocusEvent, useState } from "react"
+import IconButton from "./IconButton"
+import { Flex } from "./styled/flex"
+import { TextArea } from "./styled/textarea"
 
 interface EditableProps {
   value: string
@@ -16,11 +19,13 @@ const Editable: React.FC<EditableProps> = (props) => {
 
   const textUI = (
     <>
-      <div>
-        <span>{value}</span>
-        <span style={{ cursor: "pointer" }} onClick={() => { setEditing(true) }}>{editIcon}</span>
-        <span style={{ cursor: "pointer" }} onClick={() => { remove() }}>{removeIcon}</span>
-      </div>
+      <Flex>
+        <div style={{width: "86%"}}>{value}</div>
+        <div>
+          <IconButton link onClick={() => { setEditing(true) }} icon={editIcon} />
+          <IconButton link onClick={() => { remove() }} icon={removeIcon} />
+        </div>
+      </Flex>
       <div>
 
       </div>
@@ -28,10 +33,11 @@ const Editable: React.FC<EditableProps> = (props) => {
   )
 
   const editUI = (
-    <textarea
+    <TextArea
+      autoFocus
       value={value}
       onBlur={(e) => { setEditing(false); onBlur(e) }}
-      onChange={(e) => { onChange(e) }} />
+      onChange={(e: ChangeEvent<HTMLTextAreaElement>) => { onChange(e) }} />
   )
 
   return (

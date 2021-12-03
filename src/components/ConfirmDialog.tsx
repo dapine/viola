@@ -1,8 +1,11 @@
 import Modal from "react-modal"
+import { useTheme } from "styled-components"
+import { withConfirmDialogStyle } from "../hocs/withModalStyle"
+import { Button } from "./styled/button"
+import { Flex } from "./styled/flex"
 
 interface ConfirmDialogProps {
   isOpen: boolean
-  style: any
   children: React.ReactNode
   confirmAction: () => void
   notConfirmAction: () => void
@@ -11,24 +14,25 @@ interface ConfirmDialogProps {
 }
 
 const ConfirmDialog: React.FC<ConfirmDialogProps> = (props) => {
-  const { isOpen, style, children, confirmAction, notConfirmAction,
+  const { isOpen, children, confirmAction, notConfirmAction,
     confirmText = 'Yes', notConfirmText = 'No' } = props
 
   Modal.setAppElement('#root')
 
+  const theme = useTheme()
+
+  const StyledModal = withConfirmDialogStyle(Modal, theme.colors.background, theme.colors.foreground)
+
   return (
-    <Modal
-      isOpen={isOpen}
-      style={style}
-    >
-      {children}
-      <div>
-        <div style={{ float: "right" }}>
-          <button onClick={confirmAction}>{confirmText}</button>
-          <button onClick={notConfirmAction}>{notConfirmText}</button>
+    <StyledModal isOpen={isOpen}>
+        {children}
+        <div>
+          <Flex style={{ float: "right" }}>
+            <Button color={theme.colors.positive} style={{margin: "0 0.3em"}} onClick={confirmAction}>{confirmText}</Button>
+            <Button color={theme.colors.negative} style={{margin: "0 0.3em"}} onClick={notConfirmAction}>{notConfirmText}</Button>
+          </Flex>
         </div>
-      </div>
-    </Modal>
+    </StyledModal>
   )
 }
 

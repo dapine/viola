@@ -1,4 +1,4 @@
-const { app, BrowserWindow, Menu, dialog, ipcMain } = require('electron')
+const { app, BrowserWindow, Menu, dialog, ipcMain, nativeTheme } = require('electron')
 const electron = require("electron")
 const fs = require('fs')
 const path = require('path')
@@ -166,4 +166,8 @@ ipcMain.on('SAVE', function (e, data) {
         console.log(err)
     })
   }
+})
+
+ipcMain.on('THEME', function(e, theme) {
+  nativeTheme.themeSource = theme.mode
 })

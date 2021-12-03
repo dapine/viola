@@ -1,6 +1,10 @@
 import { useContext, useEffect, useState } from "react"
 import { toast } from "react-toastify"
 import 'react-toastify/dist/ReactToastify.css'
+import { useTheme } from "styled-components"
+import { Badge } from "../components/styled/badge"
+import { Flex } from "../components/styled/flex"
+import { Kbd } from "../components/styled/kbd"
 import SubtitleCard from "../components/SubtitleCard"
 import Timeline from "../components/Timeline"
 import Video from "../components/Video"
@@ -18,6 +22,8 @@ const Editor: React.FC = () => {
   const { state, dispatch } = useContext(StoreContext)
 
   const [videoPath, setVideoPath] = useState(defaultVideoPath)
+
+  const theme = useTheme()
 
   useEffect(() => {
     if (isElectron()) {
@@ -44,12 +50,14 @@ const Editor: React.FC = () => {
           electron.ipcRenderer.send('SAVE', { filepath: filepath, content: json })
         }
       })
+
+      electron.ipcRenderer.send('THEME', { mode: theme.mode })
     }
-  }, [state.crops, videoPath, dispatch])
+  }, [state.crops, videoPath, dispatch, theme.mode])
 
   const workspace = (
     <>
-      <div className="container">
+      <Flex>
         <div style={{ width: "10%", height: window.innerHeight, overflowY: "auto" }}>
           <Timeline {...state.timelineConfig} />
         </div>
@@ -67,20 +75,20 @@ const Editor: React.FC = () => {
             controls={true}
             onError={() => toast.error("Could not load the video", { autoClose: false, position: 'top-right' })} />
         </div>
-      </div>
+      </Flex>
     </>
   )
 
   const emptyWorkspace = (
-    <div className="container" style={{ justifyContent: "center" }}>
+    <Flex style={{ justifyContent: "center" }}>
       <div style={{ textAlign: "center" }}>
         <h1>(҂◡_◡)</h1>
         <h2>It looks like you didn't load the video/project</h2>
-        <h3>Press <kbd>Ctrl (or Cmd)</kbd> + <kbd>Shift</kbd> + <kbd>O</kbd> or click on <span className="badge primary">File &gt; Open video</span></h3>
+        <h3>Press <Kbd>Ctrl (or Cmd)</Kbd> + <Kbd>Shift</Kbd> + <Kbd>O</Kbd> or click on <Badge>File &gt; Open video</Badge></h3>
         <h3>or</h3>
-        <h3><kbd>Ctrl (or Cmd)</kbd> + <kbd>O</kbd> or click on <span className="badge warning">File &gt; Open project</span></h3>
+        <h3><Kbd>Ctrl (or Cmd)</Kbd> + <Kbd>O</Kbd> or click on <Badge color={theme.colors.attention}>File &gt; Open project</Badge></h3>
       </div>
-    </div>
+    </Flex>
   )
 
   return videoPath === "" && state.crops.length === 0 ? emptyWorkspace : workspace

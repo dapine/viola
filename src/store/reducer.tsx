@@ -10,7 +10,7 @@ export interface StateType {
   crops: Array<Crop>
 }
 
-export const initialState: StateType = {
+export const defaultState: StateType = {
   currentVideoTime: 0.0,
   videoDuration: 0.0,
   timelineConfig: {

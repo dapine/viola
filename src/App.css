@@ -1,53 +1,16 @@
-.container {
-    display: flex;
-    flex-direction: row;
-}
-
 h1, h2, h3, h4, h5, h6, p {
     font-family: "Open Sans";
 }
 
-code, span, small, kbd {
+code, span, div, small, kbd {
     font-family: "Open Sans";
 }
 
-kbd {
-    border-radius: 0.2em;
-    padding: 1px 2px 0;
-    border: 1px solid black;
-    background-color: #fff;
+button, a {
+    font-family: "Open Sans";
 }
 
 textarea {
     font-family: "Open Sans";
     padding: 0.3rem;
-}
-
-.drop {
-    padding-left: 0.4rem;
-    padding-right: 0.4rem;
-    padding-top: 0.1rem;
-    padding-bottom: 0.1rem;
-    border-radius: 9rem;
-}
-
-.badge {
-    padding: 0.1em 0.2em;
-    border-radius: 0.3em;
-}
-
-.primary {
-    color: #fff;
-    background-color: #256EFF;
-}
-
-.warning {
-    color: #fff;
-    background-color: #FF521B;
-}
-
-hr {
-    height: 1px;
-    background-color: #ccc;
-    border: none;
 }
