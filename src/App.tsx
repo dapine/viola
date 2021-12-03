@@ -1,18 +1,29 @@
 import "@fontsource/open-sans";
-import { ToastContainer } from "react-toastify";
 import { ThemeProvider } from "styled-components";
 import "./App.css";
 import Editor from "./pages/Editor";
+import { defaultState } from "./store/reducer";
 import { StoreProvider } from "./store/StoreContext";
 import { GlobalStyle } from "./style/globalStyle";
 import { defaultLightTheme } from "./style/theme";
+import { StyledToastContainer } from "./style/toast";
 
 function App() {
+  const theme = defaultLightTheme
+  const state = {
+    ...defaultState,
+    timelineConfig: {
+      ...defaultState.timelineConfig,
+      lineColor: theme.colors.foreground,
+      longLineColor: theme.colors.foreground
+    }
+  }
+
   return (
-    <StoreProvider>
-      <ThemeProvider theme={defaultLightTheme}>
+    <StoreProvider initialState={{ ...state }}>
+      <ThemeProvider theme={theme}>
         <Editor />
-        <ToastContainer />
+        <StyledToastContainer />
         <GlobalStyle />
       </ThemeProvider>
     </StoreProvider>
