@@ -55,7 +55,7 @@ export const reducer = (state: any, action: Action) => {
         }
       })
 
-      return state
+      return { ...state, crops: [...state.crops] }
     case ActionType.REMOVE_CROP:
       const newCrops = state.crops.filter((crop: Crop) => crop !== action.payload.crop)
       return { ...state, crops: newCrops }
@@ -70,12 +70,12 @@ export const reducer = (state: any, action: Action) => {
       return { ...state }
     case ActionType.REPLACE_TEXT_FROM_CROP:
       state.crops[action.payload.cropIndex].texts[action.payload.textIndex].value = action.payload.textValue
-      return { ...state }
+      return { ...state, crops: [...state.crops] }
 
     case ActionType.REMOVE_TEXT_FROM_CROP:
       const ts = state.crops[action.payload.cropIndex].texts.filter((text: Text) => text !== action.payload.text)
       state.crops[action.payload.cropIndex].texts = ts
-      return { ...state }
+      return { ...state, crops: [...state.crops] }
     default:
       return state
   }

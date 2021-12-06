@@ -9,10 +9,13 @@ import SubtitleCard from "../components/SubtitleCard"
 import Timeline from "../components/Timeline"
 import Video from "../components/Video"
 import { toSrtString } from "../exporters/srt"
+import { toVttString } from "../exporters/webvtt"
 import { ActionType } from "../store/action"
 import { StoreContext } from "../store/StoreContext"
 import Crop from "../types/crop"
 import isElectron from "../utils/isElectron"
+import base64 from "base-64"
+import utf8 from "utf8"
 
 const electron = isElectron() ? window.require("electron") : undefined
 // auto load video when in browser/dev
@@ -22,6 +25,8 @@ const Editor: React.FC = () => {
   const { state, dispatch } = useContext(StoreContext)
 
   const [videoPath, setVideoPath] = useState(defaultVideoPath)
+
+  const [subPreview, setSubPreview] = useState("")
 
   const theme = useTheme()
 
@@ -55,6 +60,10 @@ const Editor: React.FC = () => {
     }
   }, [state.crops, videoPath, dispatch, theme.mode])
 
+  useEffect(() => {
+    setSubPreview(base64.encode(utf8.encode(toVttString(state.crops))))
+  }, [state.crops])
+
   const workspace = (
     <>
       <Flex>
@@ -73,7 +82,8 @@ const Editor: React.FC = () => {
             width="640"
             height="480"
             controls={true}
-            onError={() => toast.error("Could not load the video", { autoClose: false, position: 'top-right' })} />
+            onError={() => toast.error("Could not load the video", { autoClose: false, position: 'top-right' })}
+            srcTrack={subPreview} />
         </div>
       </Flex>
     </>

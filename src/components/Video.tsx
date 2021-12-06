@@ -7,10 +7,11 @@ interface VideoProps {
   height: string
   controls?: boolean
   onError(): any
+  srcTrack?: string
 }
 
 const Video: React.FC<VideoProps> = props => {
-  const { src, width, height, onError, controls = false } = props
+  const { src, width, height, onError, controls = false, srcTrack } = props
 
   const { state, dispatch } = useContext(StoreContext)
 
@@ -26,7 +27,6 @@ const Video: React.FC<VideoProps> = props => {
   return (
     <video
       ref={ref}
-      src={src}
       width={width}
       height={height}
       controls={controls}
@@ -35,8 +35,10 @@ const Video: React.FC<VideoProps> = props => {
         const newHeight = (state.timelineConfig.height * state.timelineConfig.minimumScale) / state.timelineConfig.minimumScaleTime
         dispatch({ type: ActionType.SET_TIMELINE_HEIGHT, payload: newHeight })
       }}
-      onError={onError}
-    />
+      onError={onError}>
+      <source src={src} type="video/mp4" />
+      {srcTrack && <track default kind="subtitles" srcLang="en-US" label="Preview" src={'data:text/txt;base64,' + srcTrack} />}
+    </video>
   )
 }
 

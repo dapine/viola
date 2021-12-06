@@ -38,3 +38,23 @@ export const formatMiliSeconds = (value: number): string => {
         : Math.floor(mili * 1000)
   return `${hh}:${mm}:${ss},${mil}`
 }
+
+export const formatMMSSmsms = (value: number): string => {
+  let result = Math.floor(value)
+  let mili =  value % 1
+  let mm =
+    Math.floor((result / 60) % 60) < 10
+      ? "0" + Math.floor((result / 60) % 60)
+      : Math.floor((result / 60) % 60)
+  let ss =
+    Math.floor(result % 60) < 10
+      ? "0" + Math.floor(result % 60)
+      : Math.floor(result % 60)
+  let mil =
+    (Math.floor(mili * 1000) < 100 && Math.floor(mili * 1000) > 9)
+      ? "0" + Math.floor(mili * 1000)
+      : Math.floor(mili * 1000) < 10
+        ? "00" + Math.floor(mili * 1000)
+        : Math.floor(mili * 1000)
+  return `${mm}:${ss}.${mil}`
+}
