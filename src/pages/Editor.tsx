@@ -1,64 +1,41 @@
+import base64 from "base-64"
 import { useContext, useEffect, useState } from "react"
 import { toast } from "react-toastify"
 import 'react-toastify/dist/ReactToastify.css'
 import { useTheme } from "styled-components"
+import utf8 from "utf8"
 import { Badge } from "../components/styled/badge"
 import { Flex } from "../components/styled/flex"
 import { Kbd } from "../components/styled/kbd"
 import SubtitleCard from "../components/SubtitleCard"
 import Timeline from "../components/Timeline"
 import Video from "../components/Video"
-import { toSrtString } from "../exporters/srt"
 import { toVttString } from "../exporters/webvtt"
-import { ActionType } from "../store/action"
+import { useElectronFileOpener } from "../hooks/useElectronFileOpener"
+import { useElectronProjectOpener } from "../hooks/useElectronProjectOpener"
+import { useElectronProjectSaver } from "../hooks/useElectronProjectSaver"
+import { useElectronSubtitleExporter } from "../hooks/useElectronSubtitleExporter"
+import { useElectronTheme } from "../hooks/useElectronTheme"
 import { StoreContext } from "../store/StoreContext"
 import Crop from "../types/crop"
 import isElectron from "../utils/isElectron"
-import base64 from "base-64"
-import utf8 from "utf8"
 
-const electron = isElectron() ? window.require("electron") : undefined
 // auto load video when in browser/dev
 const defaultVideoPath = isElectron() ? "" : "/BigBuckBunny.mp4"
 
 const Editor: React.FC = () => {
   const { state, dispatch } = useContext(StoreContext)
 
-  const [videoPath, setVideoPath] = useState(defaultVideoPath)
-
-  const [subPreview, setSubPreview] = useState("")
-
   const theme = useTheme()
 
-  useEffect(() => {
-    if (isElectron()) {
-      electron.ipcRenderer.on('FILE_OPEN', (e: any, data: any) => {
-        if (data.length > 0) setVideoPath(data[0])
-      })
-      electron.ipcRenderer.on('OPEN_PROJECT', (e: any, json: any) => {
-        setVideoPath(json.videoPath)
-        dispatch({ type: ActionType.REPLACE_ALL_CROPS, payload: { crops: json.crops } })
-      })
-      electron.ipcRenderer.on('EXPORT_SRT', (e: any, filepath: string) => {
-        if (filepath) {
-          const content: string = toSrtString(state.crops)
-          electron.ipcRenderer.send('EXPORT_SRT', { filepath: filepath, content: content })
-        }
-      })
-      electron.ipcRenderer.on('SAVE', (e: any, filepath: string) => {
-        if (filepath) {
-          const saveObj = {
-            videoPath: videoPath,
-            crops: state.crops
-          }
-          const json = JSON.stringify(saveObj)
-          electron.ipcRenderer.send('SAVE', { filepath: filepath, content: json })
-        }
-      })
+  // Electron events
+  const videoPath = useElectronFileOpener(defaultVideoPath)
+  useElectronSubtitleExporter(state.crops)
+  useElectronProjectSaver(videoPath, state.crops)
+  useElectronProjectOpener(dispatch)
+  useElectronTheme(theme.mode)
 
-      electron.ipcRenderer.send('THEME', { mode: theme.mode })
-    }
-  }, [state.crops, videoPath, dispatch, theme.mode])
+  const [subPreview, setSubPreview] = useState("")
 
   useEffect(() => {
     setSubPreview(base64.encode(utf8.encode(toVttString(state.crops))))
