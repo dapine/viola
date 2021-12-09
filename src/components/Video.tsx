@@ -4,7 +4,7 @@ import { StoreContext } from "../store/StoreContext"
 interface VideoProps {
   src: string
   width: string
-  height: string
+  height?: string
   controls?: boolean
   onError(): any
   srcTrack?: string

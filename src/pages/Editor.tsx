@@ -44,10 +44,10 @@ const Editor: React.FC = () => {
   const workspace = (
     <>
       <Flex>
-        <div style={{ width: "10%", height: window.innerHeight, overflowY: "auto" }}>
+        <div style={{ width: "10%", height: window.innerHeight - 15, overflowY: "auto", resize: "horizontal", minWidth: "8%", maxWidth: "15%" }}>
           <Timeline {...state.timelineConfig} />
         </div>
-        <div style={{ width: "40%", padding: "1rem", height: window.innerHeight, overflowY: "auto" }}>
+        <div style={{ width: "40%", padding: "1rem", height: window.innerHeight - 45, overflowY: "auto", resize: "horizontal", maxWidth: "40%", minWidth: "30%" }}>
           {
             state.crops.map((crop: Crop, i: number) =>
               <SubtitleCard key={i} id={i} subKey={(i + 1).toString()} crop={crop} />
@@ -56,8 +56,7 @@ const Editor: React.FC = () => {
         </div>
         <div style={{ width: "50%" }}>
           <Video src={videoPath}
-            width="640"
-            height="480"
+            width="100%"
             controls={true}
             onError={() => toast.error("Could not load the video", { autoClose: false, position: 'top-right' })}
             srcTrack={subPreview} />
