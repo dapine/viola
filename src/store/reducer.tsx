@@ -1,6 +1,7 @@
 import { TimelineProps } from "../components/Timeline"
 import Crop from "../types/crop"
 import Text from "../types/text"
+import { Variable } from "../types/variable"
 import { Action, ActionType } from "./action"
 
 export interface StateType {
@@ -8,6 +9,7 @@ export interface StateType {
   videoDuration: number
   timelineConfig: TimelineProps
   crops: Array<Crop>
+  variables: Array<Variable>
 }
 
 export const defaultState: StateType = {
@@ -24,7 +26,8 @@ export const defaultState: StateType = {
     lineColor: "#666",
     longLineColor: "#000",
   },
-  crops: []
+  crops: [],
+  variables: [],
 }
 
 // XXX: rewrite this in a more functional/immutable way
@@ -76,6 +79,9 @@ export const reducer = (state: any, action: Action) => {
       const ts = state.crops[action.payload.cropIndex].texts.filter((text: Text) => text !== action.payload.text)
       state.crops[action.payload.cropIndex].texts = ts
       return { ...state, crops: [...state.crops] }
+
+    case ActionType.ADD_VARIABLE:
+      return { ...state, variables: [...state.variables, action.payload] }
     default:
       return state
   }

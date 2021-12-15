@@ -9,6 +9,7 @@ import { Flex } from "../components/styled/flex"
 import { Kbd } from "../components/styled/kbd"
 import SubtitleCard from "../components/SubtitleCard"
 import Timeline from "../components/Timeline"
+import VariablesCard from "../components/VariablesCard"
 import Video from "../components/Video"
 import { toVttString } from "../exporters/webvtt"
 import { useElectronFileOpener } from "../hooks/useElectronFileOpener"
@@ -48,11 +49,16 @@ const Editor: React.FC = () => {
           <Timeline {...state.timelineConfig} />
         </div>
         <div style={{ width: "40%", padding: "1rem", height: window.innerHeight - 45, overflowY: "auto", resize: "horizontal", maxWidth: "40%", minWidth: "30%" }}>
-          {
-            state.crops.map((crop: Crop, i: number) =>
-              <SubtitleCard key={i} id={i} subKey={(i + 1).toString()} crop={crop} />
-            )
-          }
+          <div>
+            <VariablesCard />
+          </div>
+          <div>
+            {
+              state.crops.map((crop: Crop, i: number) =>
+                <SubtitleCard key={i} id={i} subKey={(i + 1).toString()} crop={crop} />
+              )
+            }
+          </div>
         </div>
         <div style={{ width: "50%" }}>
           <Video src={videoPath}

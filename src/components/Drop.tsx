@@ -1,7 +1,7 @@
 import styled from "styled-components"
 
 interface DropProps {
-  children: string
+  children?: string
   style?: any
   color?: string
 }
