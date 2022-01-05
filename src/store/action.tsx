@@ -22,5 +22,6 @@ export enum ActionType {
 
   REMOVE_TEXT_FROM_CROP,
 
-  ADD_VARIABLE
+  ADD_VARIABLE,
+  SET_VARIABLE_VALUE
 }

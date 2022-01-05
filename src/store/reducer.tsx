@@ -82,6 +82,17 @@ export const reducer = (state: any, action: Action) => {
 
     case ActionType.ADD_VARIABLE:
       return { ...state, variables: [...state.variables, action.payload] }
+    case ActionType.SET_VARIABLE_VALUE:
+      state.variables[action.payload.i].value = action.payload.value
+      return {
+        ...state,
+        variables:
+          [
+            ...state.variables.slice(0, action.payload.i),
+            state.variables[action.payload.i],
+            ...state.variables.slice(action.payload.i + 1)
+          ]
+      }
     default:
       return state
   }

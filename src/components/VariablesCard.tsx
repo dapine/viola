@@ -11,26 +11,81 @@ import { Separator } from "./styled/separator"
 interface VariablesCardProps {
 }
 
-const renderVariable = (variable: Variable) => {
-  const spacing = { marginLeft: "0.5em" }
-  switch (variable.type) {
-    case VariableType.Color:
-      return <div><Circle color={variable.value} /> <span style={spacing}>Color variable</span></div>
-    case VariableType.Position:
-      return <div><span style={{ fontSize: "x-large" }}><b>⤱</b></span> <span style={spacing}>Position ({variable.value})</span></div>
-    case VariableType.TextFormatting:
-      return <div><span style={{ fontSize: "x-large" }}><b>ℱ</b></span> <span style={spacing}>Text formatting ({variable.value})</span></div>
-  }
-}
-
 const VariablesCard: React.FC<VariablesCardProps> = () => {
   const { state, dispatch } = useContext(StoreContext)
+
+  console.log(state)
+
+  const renderVariable = (variable: Variable, index: number) => {
+    const spacing = { marginLeft: "0.5em" }
+    switch (variable.type) {
+      case VariableType.Color:
+        return <div><Circle color={variable.value} /> <span style={spacing}>Color variable</span></div>
+      case VariableType.Position:
+        return (
+          <div>
+            <span style={{ fontSize: "x-large" }}><b>⤱</b></span>
+            <span style={spacing}>
+              <DropdownButton id="position-select" text={`Position (${variable.value}) ▾`}>
+                <div>
+                  <div><b><small>Select the position:</small></b></div>
+                  <div style={{ marginTop: "0.6em" }}>
+                    <Button link onClick={
+                      () => dispatch({
+                        type: ActionType.SET_VARIABLE_VALUE,
+                        payload: { i: index, value: "top" }
+                      })
+                    }>Top</Button>
+                    <Separator />
+                    <Button link onClick={
+                      () => dispatch({
+                        type: ActionType.SET_VARIABLE_VALUE,
+                        payload: { i: index, value: "bot" }
+                      })
+                    }>Bottom</Button>
+                  </div>
+                </div>
+              </DropdownButton>
+            </span>
+          </div>
+        )
+      case VariableType.TextFormatting:
+        return (
+          <div>
+            <span style={{ fontSize: "x-large" }}><b>ℱ</b></span>
+            <span style={spacing}>
+              <DropdownButton id="text-format-select" text={`Text formatting (${variable.value}) ▾`}>
+                <div>
+                  <div><b><small>Select the text formatting:</small></b></div>
+                  <div style={{ marginTop: "0.6em" }}>
+                    <Button link onClick={
+                      () => dispatch({
+                        type: ActionType.SET_VARIABLE_VALUE,
+                        payload: { i: index, value: "bold" }
+                      })
+                    }>Bold</Button>
+                    <Separator />
+                    <Button link onClick={
+                      () => dispatch({
+                        type: ActionType.SET_VARIABLE_VALUE,
+                        payload: { i: index, value: "italic" }
+                      })
+                    }>Italic</Button>
+                  </div>
+                </div>
+
+              </DropdownButton>
+            </span>
+          </div>
+        )
+    }
+  }
 
   return (
     <StyledCardBase style={{ margin: "1rem" }}>
       <div>
         {state.variables.map((variable, i) => {
-          return renderVariable(variable)
+          return renderVariable(variable, i)
         })}
       </div>
 
