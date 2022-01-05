@@ -7,16 +7,17 @@ interface DropdownButtonProps {
   children?: React.ReactNode
   text: string
   mouseOver?: boolean
+  link?: boolean
 }
 
 const DropdownButton: React.FC<DropdownButtonProps> = (props) => {
-  const { children, text, mouseOver = false, id } = props
+  const { children, text, mouseOver = false, id, link = false } = props
 
   const { Portal, show } = usePortal({ containerId: id, defaultShow: false, autoRemoveContainer: false })
 
   const theme = useTheme()
 
-  const button = mouseOver ? <Button onMouseOver={show}>{text}</Button> : <Button onClick={show}>{text}</Button>
+  const button = mouseOver ? <Button link={link} onMouseOver={show}>{text}</Button> : <Button link={link} onClick={show}>{text}</Button>
 
   return (
     <>

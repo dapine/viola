@@ -1,7 +1,9 @@
 import { useContext } from "react"
+import { CompactPicker } from "react-color"
 import { ActionType } from "../store/action"
 import { StoreContext } from "../store/StoreContext"
 import { Variable, VariableType } from "../types/variable"
+import colors from "../utils/colors"
 import DropdownButton from "./DropdownButton"
 import { Button } from "./styled/button"
 import { StyledCardBase } from './styled/card'
@@ -20,7 +22,23 @@ const VariablesCard: React.FC<VariablesCardProps> = () => {
     const spacing = { marginLeft: "0.5em" }
     switch (variable.type) {
       case VariableType.Color:
-        return <div><Circle color={variable.value} /> <span style={spacing}>Color variable</span></div>
+        return (
+          <div>
+            <Circle color={variable.value} />
+            <span style={spacing}>Color variable</span>
+            <DropdownButton link id="color-select" text='✏️'>
+              <CompactPicker
+                onChangeComplete={(color) => {
+                  dispatch({
+                    type: ActionType.SET_VARIABLE_VALUE,
+                    payload: { i: index, value: color.hex }
+                  })
+                }}
+                colors={colors}
+              />
+            </DropdownButton>
+          </div>
+        )
       case VariableType.Position:
         return (
           <div>
@@ -97,7 +115,7 @@ const VariablesCard: React.FC<VariablesCardProps> = () => {
               <Button link onClick={
                 () => dispatch({
                   type: ActionType.ADD_VARIABLE,
-                  payload: { type: VariableType.Color, value: "#ff0000" } as Variable
+                  payload: { type: VariableType.Color, value: "#ffffff" } as Variable
                 })
               }>Color</Button>
               <Separator />
