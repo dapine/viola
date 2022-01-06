@@ -16,8 +16,6 @@ interface VariablesCardProps {
 const VariablesCard: React.FC<VariablesCardProps> = () => {
   const { state, dispatch } = useContext(StoreContext)
 
-  console.log(state)
-
   const renderVariable = (variable: Variable, index: number) => {
     const spacing = { marginLeft: "0.5em" }
     switch (variable.type) {

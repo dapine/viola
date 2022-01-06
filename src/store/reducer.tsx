@@ -80,6 +80,18 @@ export const reducer = (state: any, action: Action) => {
       state.crops[action.payload.cropIndex].texts = ts
       return { ...state, crops: [...state.crops] }
 
+    case ActionType.ADD_VARIABLE_TO_TEXT:
+      const nvars = [...state.crops[action.payload.cropIndex].texts[action.payload.textIndex].variables, action.payload.variable]
+      state.crops[action.payload.cropIndex].texts[action.payload.textIndex].variables = nvars
+
+      return { ...state, crops: [...state.crops] }
+
+    case ActionType.REMOVE_VARIABLE_FROM_TEXT:
+      const rem = state.crops[action.payload.cropIndex].texts[action.payload.textIndex].variables.filter((v: Variable) => v !== action.payload.variable)
+      state.crops[action.payload.cropIndex].texts[action.payload.textIndex].variables = rem
+
+      return { ...state, crops: [...state.crops] }
+
     case ActionType.ADD_VARIABLE:
       return { ...state, variables: [...state.variables, action.payload] }
     case ActionType.SET_VARIABLE_VALUE:
