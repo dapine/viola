@@ -4,7 +4,7 @@ import { ActionType } from "../store/action"
 import { StoreContext } from "../store/StoreContext"
 import { Variable, VariableType } from "../types/variable"
 import colors from "../utils/colors"
-import DropdownButton from "./DropdownButton"
+import Dropdown from "./Dropdown"
 import { Button } from "./styled/button"
 import { StyledCardBase } from './styled/card'
 import { Circle } from "./styled/circle"
@@ -24,7 +24,7 @@ const VariablesCard: React.FC<VariablesCardProps> = () => {
           <div>
             <Circle color={variable.value} />
             <span style={spacing}>Color variable</span>
-            <DropdownButton link id="color-select" text='✏️'>
+            <Dropdown link text='✏️'>
               <CompactPicker
                 onChangeComplete={(color) => {
                   dispatch({
@@ -34,7 +34,7 @@ const VariablesCard: React.FC<VariablesCardProps> = () => {
                 }}
                 colors={colors}
               />
-            </DropdownButton>
+            </Dropdown>
           </div>
         )
       case VariableType.Position:
@@ -42,7 +42,7 @@ const VariablesCard: React.FC<VariablesCardProps> = () => {
           <div>
             <span style={{ fontSize: "x-large" }}><b>⤱</b></span>
             <span style={spacing}>
-              <DropdownButton id="position-select" text={`Position (${variable.value}) ▾`}>
+              <Dropdown text={`Position (${variable.value}) ▾`}>
                 <div>
                   <div><b><small>Select the position:</small></b></div>
                   <div style={{ marginTop: "0.6em" }}>
@@ -61,7 +61,7 @@ const VariablesCard: React.FC<VariablesCardProps> = () => {
                     }>Bottom</Button>
                   </div>
                 </div>
-              </DropdownButton>
+              </Dropdown>
             </span>
           </div>
         )
@@ -70,7 +70,7 @@ const VariablesCard: React.FC<VariablesCardProps> = () => {
           <div>
             <span style={{ fontSize: "x-large" }}><b>ℱ</b></span>
             <span style={spacing}>
-              <DropdownButton id="text-format-select" text={`Text formatting (${variable.value}) ▾`}>
+              <Dropdown text={`Text formatting (${variable.value}) ▾`}>
                 <div>
                   <div><b><small>Select the text formatting:</small></b></div>
                   <div style={{ marginTop: "0.6em" }}>
@@ -90,7 +90,7 @@ const VariablesCard: React.FC<VariablesCardProps> = () => {
                   </div>
                 </div>
 
-              </DropdownButton>
+              </Dropdown>
             </span>
           </div>
         )
@@ -106,7 +106,7 @@ const VariablesCard: React.FC<VariablesCardProps> = () => {
       </div>
 
       <div style={{ marginTop: "1em" }}>
-        <DropdownButton id="variable-type-selection" text="New ▾">
+        <Dropdown text="New ▾">
           <div>
             <div><b><small>Select the type:</small></b></div>
             <div style={{ marginTop: "0.6em" }}>
@@ -133,7 +133,7 @@ const VariablesCard: React.FC<VariablesCardProps> = () => {
               <Separator />
             </div>
           </div>
-        </DropdownButton>
+        </Dropdown>
       </div>
     </StyledCardBase>
   )

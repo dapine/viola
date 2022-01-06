@@ -7,12 +7,12 @@ import { ActionType } from "../store/action"
 import { StoreContext } from "../store/StoreContext"
 import Crop from "../types/crop"
 import Text from "../types/text"
-import { VariableType } from '../types/variable'
+import { Variable, VariableType } from '../types/variable'
 import { formatMiliSeconds } from "../utils/utils"
 import ConfirmDialog from "./ConfirmDialog"
 import Draggable from "./Draggable"
 import Drop from "./Drop"
-import DropdownButton from './DropdownButton'
+import Dropdown from './Dropdown'
 import Editable from "./Editable"
 import IconButton from "./IconButton"
 import { Button } from './styled/button'
@@ -64,6 +64,19 @@ const SubtitleCard: React.FC<SubtitleCardProps> = props => {
     setModalRemoveCropOpen(false)
   }
 
+  const assignVariable = (cropIndex: number, textIndex: number, variable: Variable) => {
+    dispatch({
+      type: ActionType.ADD_VARIABLE_TO_TEXT,
+      payload: { cropIndex: cropIndex, textIndex: textIndex, variable: variable }
+    })
+  }
+
+  const unassignVariable = (cropIndex: number, textIndex: number, variable: Variable) => {
+    dispatch({
+      type: ActionType.REMOVE_VARIABLE_FROM_TEXT, payload: { cropIndex: cropIndex, textIndex: textIndex, variable: variable }
+    })
+  }
+
   return (
     <DndProvider backend={HTML5Backend}>
       <StyledCardBase key={subKey} style={{ margin: "1rem", border: border }}>
@@ -91,7 +104,7 @@ const SubtitleCard: React.FC<SubtitleCardProps> = props => {
                   }}
                   actions={[
                     { func: () => { setModalRemoveTextOpen(true); setTextToDelete(text) }, icon: '❌' },
-                    <DropdownButton link id="variables" text='Variables' >
+                    <Dropdown link text='Variables' >
                       <div>
                         <div><b><small>Select the variables:</small></b></div>
                         <div style={{ marginTop: "0.6em" }}>
@@ -102,9 +115,7 @@ const SubtitleCard: React.FC<SubtitleCardProps> = props => {
                                   return (
                                     <div>
                                       <input type="checkbox" onChange={(e) => {
-                                        e.target.checked
-                                          ? dispatch({ type: ActionType.ADD_VARIABLE_TO_TEXT, payload: { cropIndex: id, textIndex: i, variable: v } })
-                                          : dispatch({ type: ActionType.REMOVE_VARIABLE_FROM_TEXT, payload: { cropIndex: id, textIndex: i, variable: v } })
+                                        e.target.checked ? assignVariable(id, i, v) : unassignVariable(id, i, v)
                                       }} />
                                       Color: <Circle color={v.value} /> ({v.value})
                                       <Separator />
@@ -114,9 +125,7 @@ const SubtitleCard: React.FC<SubtitleCardProps> = props => {
                                   return (
                                     <div>
                                       <input type="checkbox" onChange={(e) => {
-                                        e.target.checked
-                                          ? dispatch({ type: ActionType.ADD_VARIABLE_TO_TEXT, payload: { cropIndex: id, textIndex: i, variable: v } })
-                                          : dispatch({ type: ActionType.REMOVE_VARIABLE_FROM_TEXT, payload: { cropIndex: id, textIndex: i, variable: v } })
+                                        e.target.checked ? assignVariable(id, i, v) : unassignVariable(id, i, v)
                                       }} />
                                       Position: {v.value}
                                       <Separator />
@@ -126,20 +135,19 @@ const SubtitleCard: React.FC<SubtitleCardProps> = props => {
                                   return (
                                     <div>
                                       <input type="checkbox" onChange={(e) => {
-                                        e.target.checked
-                                          ? dispatch({ type: ActionType.ADD_VARIABLE_TO_TEXT, payload: { cropIndex: id, textIndex: i, variable: v } })
-                                          : dispatch({ type: ActionType.REMOVE_VARIABLE_FROM_TEXT, payload: { cropIndex: id, textIndex: i, variable: v } })
+                                        e.target.checked ? assignVariable(id, i, v) : unassignVariable(id, i, v)
                                       }} />
                                       Formatting: {v.value}
                                       <Separator />
                                     </div>
                                   )
+                                default: return null
                               }
                             })
                           }
                         </div>
                       </div>
-                    </DropdownButton>
+                    </Dropdown>
                   ]}
                 />
                 <Separator />
