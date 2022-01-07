@@ -56,7 +56,7 @@ const VariablesCard: React.FC<VariablesCardProps> = () => {
                     <Button link onClick={
                       () => dispatch({
                         type: ActionType.SET_VARIABLE_VALUE,
-                        payload: { i: index, value: "bot" }
+                        payload: { i: index, value: "bottom" }
                       })
                     }>Bottom</Button>
                   </div>
@@ -87,6 +87,13 @@ const VariablesCard: React.FC<VariablesCardProps> = () => {
                         payload: { i: index, value: "italic" }
                       })
                     }>Italic</Button>
+                    <Separator />
+                    <Button link onClick={
+                      () => dispatch({
+                        type: ActionType.SET_VARIABLE_VALUE,
+                        payload: { i: index, value: "underline" }
+                      })
+                    }>Underline</Button>
                   </div>
                 </div>
 
