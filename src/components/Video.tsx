@@ -1,4 +1,5 @@
 import { SyntheticEvent, useContext, useEffect, useRef } from "react"
+import { useTheme } from "styled-components"
 import { ActionType } from "../store/action"
 import { StoreContext } from "../store/StoreContext"
 interface VideoProps {
@@ -17,6 +18,8 @@ const Video: React.FC<VideoProps> = props => {
 
   const ref = useRef(null)
 
+  const theme = useTheme()
+
   useEffect(() => {
     const video = ref?.current
 
@@ -26,6 +29,7 @@ const Video: React.FC<VideoProps> = props => {
 
   return (
     <video
+      style={{ borderRadius: theme.button.shape }}
       ref={ref}
       width={width}
       height={height}
