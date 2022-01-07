@@ -114,7 +114,7 @@ const SubtitleCard: React.FC<SubtitleCardProps> = props => {
                                 case VariableType.Color:
                                   return (
                                     <div>
-                                      <input type="checkbox" onChange={(e) => {
+                                      <input type="checkbox" checked={text.variables.some((tv) => tv === v)} onChange={(e) => {
                                         e.target.checked ? assignVariable(id, i, v) : unassignVariable(id, i, v)
                                       }} />
                                       Color: <Circle color={v.value} /> ({v.value})
@@ -124,7 +124,7 @@ const SubtitleCard: React.FC<SubtitleCardProps> = props => {
                                 case VariableType.Position:
                                   return (
                                     <div>
-                                      <input type="checkbox" onChange={(e) => {
+                                      <input type="checkbox" checked={text.variables.some((tv) => tv === v)} onChange={(e) => {
                                         e.target.checked ? assignVariable(id, i, v) : unassignVariable(id, i, v)
                                       }} />
                                       Position: {v.value}
@@ -134,7 +134,7 @@ const SubtitleCard: React.FC<SubtitleCardProps> = props => {
                                 case VariableType.TextFormatting:
                                   return (
                                     <div>
-                                      <input type="checkbox" onChange={(e) => {
+                                      <input type="checkbox" checked={text.variables.some((tv) => tv === v)} onChange={(e) => {
                                         e.target.checked ? assignVariable(id, i, v) : unassignVariable(id, i, v)
                                       }} />
                                       Formatting: {v.value}
