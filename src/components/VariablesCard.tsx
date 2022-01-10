@@ -1,3 +1,4 @@
+import { PencilIcon, FoldIcon, TypographyIcon } from "@primer/octicons-react"
 import { useContext } from "react"
 import { CompactPicker } from "react-color"
 import { ActionType } from "../store/action"
@@ -24,7 +25,7 @@ const VariablesCard: React.FC<VariablesCardProps> = () => {
           <div>
             <Circle color={variable.value} />
             <span style={spacing}>Color variable</span>
-            <Dropdown link text='✏️'>
+            <Dropdown link text={<PencilIcon />}>
               <CompactPicker
                 onChangeComplete={(color) => {
                   dispatch({
@@ -40,7 +41,7 @@ const VariablesCard: React.FC<VariablesCardProps> = () => {
       case VariableType.Position:
         return (
           <div>
-            <span style={{ fontSize: "x-large" }}><b>⤱</b></span>
+            <span style={{ fontSize: "x-large" }}><b><FoldIcon /></b></span>
             <span style={spacing}>
               <Dropdown text={`Position (${variable.value}) ▾`}>
                 <div>
@@ -68,7 +69,7 @@ const VariablesCard: React.FC<VariablesCardProps> = () => {
       case VariableType.TextFormatting:
         return (
           <div>
-            <span style={{ fontSize: "x-large" }}><b>ℱ</b></span>
+            <span style={{ fontSize: "x-large" }}><b><TypographyIcon /></b></span>
             <span style={spacing}>
               <Dropdown text={`Text formatting (${variable.value}) ▾`}>
                 <div>

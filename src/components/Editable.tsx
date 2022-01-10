@@ -1,4 +1,7 @@
+import { PencilIcon } from "@primer/octicons-react"
+
 import React, { ChangeEvent, FocusEvent, useState } from "react"
+import { useTheme } from "styled-components"
 import IconButton from "./IconButton"
 import { Flex } from "./styled/flex"
 import { TextArea } from "./styled/textarea"
@@ -21,21 +24,33 @@ function isActionParam(ac: EditableActionParams | React.ReactNode): ac is Editab
 }
 
 const Editable: React.FC<EditableProps> = (props) => {
-  const { value, onChange, onBlur = () => { }, editIcon = '✏️️', actions } = props
+  const { value, onChange, onBlur = () => { }, editIcon = <PencilIcon />, actions } = props
+
+  const theme = useTheme()
 
   const [isEditing, setEditing] = useState(false)
+  const [style, setStyle] = useState<React.CSSProperties>({ borderRadius: theme.button.shape, padding: '4px 8px' })
+
+  const dim = () => {
+    setStyle({ ...style, boxShadow: 'inset 0 0 100px 100px rgba(0, 0, 0, 0.1)' })
+  }
+
+  const lighten = () => {
+    const { boxShadow, ...styleWOShadow } = style
+    setStyle(styleWOShadow)
+  }
 
   const textUI = (
     <>
       <Flex>
-        <div style={{ width: "86%" }}>{value}</div>
+        <div style={{ width: "80%", overflowWrap: "break-word" }}>{value}</div>
         <div>
+          <IconButton link onClick={() => { setEditing(true) }} icon={editIcon} />
           {
             actions?.map((ac) => {
               return isActionParam(ac) ? <IconButton link onClick={ac.func} icon={ac.icon} /> : ac
             })
           }
-          <IconButton link onClick={() => { setEditing(true) }} icon={editIcon} />
         </div>
       </Flex>
       <div>
@@ -53,9 +68,9 @@ const Editable: React.FC<EditableProps> = (props) => {
   )
 
   return (
-    <>
+    <div style={style} onMouseEnter={dim} onMouseLeave={lighten}>
       {isEditing ? editUI : textUI}
-    </>
+    </div>
   )
 }
 

@@ -3,7 +3,7 @@ import { Button } from "./styled/button"
 
 interface IconButtonProps {
   onClick: (event: MouseEvent<HTMLButtonElement>) => void
-  icon: any
+  icon: string | React.ReactNode
   style?: object
   color?: string
   link?: boolean

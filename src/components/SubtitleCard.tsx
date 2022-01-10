@@ -1,3 +1,5 @@
+import { TrashIcon, ArrowRightIcon, CodeIcon } from '@primer/octicons-react'
+
 import update from 'immutability-helper'
 import { useCallback, useContext, useState } from "react"
 import { DndProvider } from "react-dnd"
@@ -85,11 +87,11 @@ const SubtitleCard: React.FC<SubtitleCardProps> = props => {
           <IconButton
             style={{ float: "right" }}
             onClick={() => setModalRemoveCropOpen(true)}
-            icon='❌'
+            icon={<TrashIcon />}
             color={theme.colors.negative}
           />
         </div>
-        <div><span>{cropStartMili}</span> ➡️ <span>{cropEndMili}</span></div>
+        <div style={{ display: 'flex', alignItems: 'center' }}>{cropStartMili} <ArrowRightIcon /> {cropEndMili}</div>
         <div style={{ marginTop: "1em" }}>
           {crop.texts.map((text, i) => {
             return (
@@ -103,8 +105,7 @@ const SubtitleCard: React.FC<SubtitleCardProps> = props => {
                     })
                   }}
                   actions={[
-                    { func: () => { setModalRemoveTextOpen(true); setTextToDelete(text) }, icon: '❌' },
-                    <Dropdown link text='Variables' >
+                    <Dropdown link text={<CodeIcon />} >
                       <div>
                         <div><b><small>Select the variables:</small></b></div>
                         <div style={{ marginTop: "0.6em" }}>
@@ -147,7 +148,8 @@ const SubtitleCard: React.FC<SubtitleCardProps> = props => {
                           }
                         </div>
                       </div>
-                    </Dropdown>
+                    </Dropdown>,
+                    { func: () => { setModalRemoveTextOpen(true); setTextToDelete(text) }, icon: <TrashIcon /> },
                   ]}
                 />
                 <Separator />

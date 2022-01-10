@@ -4,7 +4,7 @@ import { Button } from "./styled/button"
 
 interface DropdownButtonProps {
   children?: React.ReactNode
-  text: string
+  text: string | React.ReactNode
   mouseOver?: boolean
   link?: boolean
   parentRef: React.RefObject<HTMLDivElement>
@@ -13,7 +13,7 @@ interface DropdownButtonProps {
 const DropdownButton: React.FC<DropdownButtonProps> = (props) => {
   const { children, text, mouseOver = false, link = false, parentRef } = props
 
-  const { Portal, show } = usePortal({ /*containerId: id,*/ defaultShow: false, autoRemoveContainer: false })
+  const { Portal, show } = usePortal({ defaultShow: false, autoRemoveContainer: false })
 
   const theme = useTheme()
 

@@ -2,7 +2,7 @@ import { useRef } from "react"
 import DropdownButton from "./DropdownButton"
 
 interface DropdownProps {
-  text: string
+  text: string | React.ReactNode
   link?: boolean
   children: React.ReactNode
 }
