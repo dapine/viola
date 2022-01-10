@@ -1,4 +1,4 @@
-import { PencilIcon, FoldIcon, TypographyIcon } from "@primer/octicons-react"
+import { PencilIcon, FoldIcon, TypographyIcon } from "@primer/octicons-react"
 import { useContext } from "react"
 import { CompactPicker } from "react-color"
 import { ActionType } from "../store/action"

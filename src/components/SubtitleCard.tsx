@@ -1,5 +1,4 @@
-import { TrashIcon, ArrowRightIcon, CodeIcon } from '@primer/octicons-react'
-
+import { TrashIcon, ArrowRightIcon, CodeIcon, DuplicateIcon } from '@primer/octicons-react'
 import update from 'immutability-helper'
 import { useCallback, useContext, useState } from "react"
 import { DndProvider } from "react-dnd"
@@ -66,6 +65,18 @@ const SubtitleCard: React.FC<SubtitleCardProps> = props => {
     setModalRemoveCropOpen(false)
   }
 
+  const duplicateCrop = () => {
+    // deep copy of current crop
+    const newCrop = JSON.parse(JSON.stringify(crop))
+
+    const crops = [...state.crops, newCrop]
+
+    const sorted = crops.sort((a: Crop, b: Crop) => {
+      return a.start - b.start
+    })
+    dispatch({ type: ActionType.REPLACE_ALL_CROPS, payload: { crops: sorted } })
+  }
+
   const assignVariable = (cropIndex: number, textIndex: number, variable: Variable) => {
     dispatch({
       type: ActionType.ADD_VARIABLE_TO_TEXT,
@@ -89,6 +100,12 @@ const SubtitleCard: React.FC<SubtitleCardProps> = props => {
             onClick={() => setModalRemoveCropOpen(true)}
             icon={<TrashIcon />}
             color={theme.colors.negative}
+          />
+          <IconButton
+            style={{ float: "right", margin: "0 4px" }}
+            onClick={duplicateCrop}
+            icon={<DuplicateIcon />}
+            color={theme.colors.primary}
           />
         </div>
         <div style={{ display: 'flex', alignItems: 'center' }}>{cropStartMili} <ArrowRightIcon /> {cropEndMili}</div>
@@ -115,7 +132,7 @@ const SubtitleCard: React.FC<SubtitleCardProps> = props => {
                                 case VariableType.Color:
                                   return (
                                     <div>
-                                      <input type="checkbox" checked={text.variables.some((tv) => tv === v)} onChange={(e) => {
+                                      <input type="checkbox" checked={text.variables.some((tv) => tv.type === v.type && tv.value === v.value)} onChange={(e) => {
                                         e.target.checked ? assignVariable(id, i, v) : unassignVariable(id, i, v)
                                       }} />
                                       Color: <Circle color={v.value} /> ({v.value})
@@ -125,7 +142,7 @@ const SubtitleCard: React.FC<SubtitleCardProps> = props => {
                                 case VariableType.Position:
                                   return (
                                     <div>
-                                      <input type="checkbox" checked={text.variables.some((tv) => tv === v)} onChange={(e) => {
+                                      <input type="checkbox" checked={text.variables.some((tv) => tv.type === v.type && tv.value === v.value)} onChange={(e) => {
                                         e.target.checked ? assignVariable(id, i, v) : unassignVariable(id, i, v)
                                       }} />
                                       Position: {v.value}
@@ -135,7 +152,7 @@ const SubtitleCard: React.FC<SubtitleCardProps> = props => {
                                 case VariableType.TextFormatting:
                                   return (
                                     <div>
-                                      <input type="checkbox" checked={text.variables.some((tv) => tv === v)} onChange={(e) => {
+                                      <input type="checkbox" checked={text.variables.some((tv) => tv.type === v.type && tv.value === v.value)} onChange={(e) => {
                                         e.target.checked ? assignVariable(id, i, v) : unassignVariable(id, i, v)
                                       }} />
                                       Formatting: {v.value}

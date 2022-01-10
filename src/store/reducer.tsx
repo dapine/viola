@@ -50,7 +50,7 @@ export const reducer = (state: any, action: Action) => {
       return state
     case ActionType.ADD_CROP:
       state.crops.push(action.payload.crop)
-      return state
+      return { ...state }
     case ActionType.REPLACE_CROP:
       state.crops.forEach((crop: Crop, i: number) => {
         if (i === action.payload.index) {
@@ -87,7 +87,7 @@ export const reducer = (state: any, action: Action) => {
       return { ...state, crops: [...state.crops] }
 
     case ActionType.REMOVE_VARIABLE_FROM_TEXT:
-      const rem = state.crops[action.payload.cropIndex].texts[action.payload.textIndex].variables.filter((v: Variable) => v !== action.payload.variable)
+      const rem = state.crops[action.payload.cropIndex].texts[action.payload.textIndex].variables.filter((v: Variable) => v.type !== action.payload.variable.type && v.value !== action.payload.variable.value)
       state.crops[action.payload.cropIndex].texts[action.payload.textIndex].variables = rem
 
       return { ...state, crops: [...state.crops] }
