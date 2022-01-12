@@ -1,7 +1,9 @@
 {
-  "name": "caption",
+  "name": "viola",
   "version": "0.1.0",
+  "description": "A subtitle editor",
   "private": true,
+  "author": "Breno Pinheiro <davepinh@gmail.com (https://dapine.github.io)",
   "main": "public/electron.js",
   "homepage": "./",
   "dependencies": {
@@ -69,7 +71,7 @@
     "electron-builder": "^22.13.1"
   },
   "build": {
-    "appId": "xyz.dapine.caption",
+    "appId": "xyz.dapine.viola",
     "files": [
       "build/**/*",
       "node_modules/**/*"
