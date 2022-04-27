@@ -22,7 +22,11 @@ import Crop from "../types/crop"
 import isElectron from "../utils/isElectron"
 
 // auto load video when in browser/dev
-const defaultVideoPath = isElectron() ? "" : "/BigBuckBunny.mp4"
+const defaultVideoPath = isElectron() && process.env.NODE_ENV !== "development"  
+												 ? "" 
+												 : (process.env.REACT_APP_DEV_VIDEO_PATH ?? "")
+
+console.log(process.env.NODE_ENV)
 
 const Editor: React.FC = () => {
   const { state, dispatch } = useContext(StoreContext)
